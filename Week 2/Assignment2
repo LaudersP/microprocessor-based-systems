@@ -1,0 +1,25 @@
+%uasm65,title=""
+	org 0200h
+
+main:
+;Place your program code here.
+    LDA #00000001b
+
+loop:    
+    ADC #1b
+    STA 0a200h
+    JMP delayStart
+    
+delayStart:
+    LDX #0d
+    
+delay:
+    INX
+    CPX #100d
+    BNE delay
+    
+    JMP loop
+
+	end
+
+%/uasm65
