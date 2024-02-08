@@ -1,0 +1,626 @@
+Assignment 1. v.03.
+
+
+Enter your name in the following fold.
+%info
+Parker Lauders
+%/info
+
+
+======================================================================
+Program 1 (15 points).
+
+Write a program that will copy the 100 bytes that start at "source"
+to "destination".
+
+-d 0271 02D4
+
+%uasm65,title=""
+	org 0200h
+	
+main:
+    LDX #0d
+    
+loop:
+    LDA source,x
+    STA destination,x
+    
+    INX
+    CPX #100d
+    BNE loop
+
+source:
+	dbt 59d,61d,37d,128d,71d,150d,195d,130d,69d,84d
+	dbt 171d,227d,99d,214d,233d,136d,80d,253d,242d
+	dbt 112d,221d,151d,101d,117d,76d,226d,174d,205d
+	dbt 84d,78d,139d,89d,195d,243d,69d,128d,217d,215d
+	dbt 57d,100d,227d,226d,233d,238d,229d,228d,135d
+	dbt 140d,98d,211d,245d,120d,206d,198d,47d,191d
+	dbt 239d,27d,236d,12d,242d,148d,98d,11d,38d,189d
+	dbt 238d,225d,142d,214d,214d,21d,75d,17d,190d
+	dbt 178d,123d,125d,123d,10d,166d,123d,135d,220d
+	dbt 193d,46d,248d,222d,63d,206d,197d,101d,144d
+	dbt 201d,233d,12d,241d,85d,180d,29d
+	
+destination:
+	dbt 100d(0d)
+
+	end
+
+%/uasm65
+
+    %output,mpversion="347",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A200BD0D029D7102E8E064D0F53B3D25804796C3BA
+      	S1170214824554ABE363D6E98850FDF270DD9765754CE2AEA6
+      	S1170228CD544E8B59C3F34580D9D73964E3E2E9EEE5E487B7
+      	S117023C8C62D3F578CEC62FBFEF1BEC0CF294620B26BDEE34
+      	S1170250E18ED6D6154B11BEB27B7D7B0AA67B87DCC12EF8B2
+      	S1170264DE3FCEC56590C9E90CF155B41D0000000000000008
+      	S117027800000000000000000000000000000000000000006E
+      	S117028C00000000000000000000000000000000000000005A
+      	S11702A0000000000000000000000000000000000000000046
+      	S11702B4000000000000000000000000000000000000000032
+      	S11002C80000000000000000000000000025
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |	org 0200h
+                      000002 |	
+      0200            000003 |main:
+      0200 A2 00      000004 |    LDX #0d
+                      000005 |    
+      0202            000006 |loop:
+      0202 BD 0D 02   000007 |    LDA source,x
+      0205 9D 71 02   000008 |    STA destination,x
+                      000009 |    
+      0208 E8         000010 |    INX
+      0209 E0 64      000011 |    CPX #100d
+      020B D0 F5      000012 |    BNE loop
+                      000013 |
+      020D            000014 |source:
+      020D 3B         000015 |	dbt 59d,61d,37d,128d,71d,150d,195d,130d,69d,84d
+      020E 3D               
+      020F 25               
+      0210 80               
+      0211 47               
+      0212 96               
+      0213 C3               
+      0214 82               
+      0215 45               
+      0216 54               
+      0217 AB         000016 |	dbt 171d,227d,99d,214d,233d,136d,80d,253d,242d
+      0218 E3               
+      0219 63               
+      021A D6               
+      021B E9               
+      021C 88               
+      021D 50               
+      021E FD               
+      021F F2               
+      0220 70         000017 |	dbt 112d,221d,151d,101d,117d,76d,226d,174d,205d
+      0221 DD               
+      0222 97               
+      0223 65               
+      0224 75               
+      0225 4C               
+      0226 E2               
+      0227 AE               
+      0228 CD               
+      0229 54         000018 |	dbt 84d,78d,139d,89d,195d,243d,69d,128d,217d,215d
+      022A 4E               
+      022B 8B               
+      022C 59               
+      022D C3               
+      022E F3               
+      022F 45               
+      0230 80               
+      0231 D9               
+      0232 D7               
+      0233 39         000019 |	dbt 57d,100d,227d,226d,233d,238d,229d,228d,135d
+      0234 64               
+      0235 E3               
+      0236 E2               
+      0237 E9               
+      0238 EE               
+      0239 E5               
+      023A E4               
+      023B 87               
+      023C 8C         000020 |	dbt 140d,98d,211d,245d,120d,206d,198d,47d,191d
+      023D 62               
+      023E D3               
+      023F F5               
+      0240 78               
+      0241 CE               
+      0242 C6               
+      0243 2F               
+      0244 BF               
+      0245 EF         000021 |	dbt 239d,27d,236d,12d,242d,148d,98d,11d,38d,189d
+      0246 1B               
+      0247 EC               
+      0248 0C               
+      0249 F2               
+      024A 94               
+      024B 62               
+      024C 0B               
+      024D 26               
+      024E BD               
+      024F EE         000022 |	dbt 238d,225d,142d,214d,214d,21d,75d,17d,190d
+      0250 E1               
+      0251 8E               
+      0252 D6               
+      0253 D6               
+      0254 15               
+      0255 4B               
+      0256 11               
+      0257 BE               
+      0258 B2         000023 |	dbt 178d,123d,125d,123d,10d,166d,123d,135d,220d
+      0259 7B               
+      025A 7D               
+      025B 7B               
+      025C 0A               
+      025D A6               
+      025E 7B               
+      025F 87               
+      0260 DC               
+      0261 C1         000024 |	dbt 193d,46d,248d,222d,63d,206d,197d,101d,144d
+      0262 2E               
+      0263 F8               
+      0264 DE               
+      0265 3F               
+      0266 CE               
+      0267 C5               
+      0268 65               
+      0269 90               
+      026A C9         000025 |	dbt 201d,233d,12d,241d,85d,180d,29d
+      026B E9               
+      026C 0C               
+      026D F1               
+      026E 55               
+      026F B4               
+      0270 1D               
+                      000026 |	
+      0271            000027 |destination:
+      0271 00         000028 |	dbt 100d(0d)
+      0272 00 00 00         
+      0275 00 00 00         
+      0278 00 00 00         
+      027B 00 00 00         
+      027E 00 00 00         
+      0281 00 00 00         
+      0284 00 00 00         
+      0287 00 00 00         
+      028A 00 00 00         
+      028D 00 00 00         
+      0290 00 00 00         
+      0293 00 00 00         
+      0296 00 00 00         
+      0299 00 00 00         
+      029C 00 00 00         
+      029F 00 00 00         
+      02A2 00 00 00         
+      02A5 00 00 00         
+      02A8 00 00 00         
+      02AB 00 00 00         
+      02AE 00 00 00         
+      02B1 00 00 00         
+      02B4 00 00 00         
+      02B7 00 00 00         
+      02BA 00 00 00         
+      02BD 00 00 00         
+      02C0 00 00 00         
+      02C3 00 00 00         
+      02C6 00 00 00         
+      02C9 00 00 00         
+      02CC 00 00 00         
+      02CF 00 00 00         
+      02D2 00 00 00         
+                      000029 |
+                      000030 |	end
+      
+      *** Symbol Table ***
+      {MAIN=512, SOURCE=525, LOOP=514, DESTINATION=625, =0}
+.   %/output
+
+
+
+
+======================================================================
+Program 2 (15 points).
+
+Write a program that will capitalize all the letters in the string 
+that starts at "string1".
+
+-d 0217 0296
+
+%uasm65,title=""
+    org 0200h
+
+main:
+    LDX #0d
+    
+loop:
+    LDA string1,x
+    
+    CMP #61h
+    BCC store
+    CMP #7Ah
+    BCS store
+    
+    SBC #33d
+    
+store:
+    STA string1,x
+    INX
+    
+    CMP #0d
+    BNE loop
+
+
+string1:
+	dbt "A bird in the hand is worth two in the bush. Early to bed and "
+	dbt "early to rise makes a person healthy, wealthy, and wise."
+	dbt 0d
+	
+	end
+%/uasm65
+
+    %output,mpversion="347",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A200BD1702C9619006C97AB002E9219D1702E8C948
+      	S117021400D0EB41206269726420696E207468652068616E66
+      	S11702286420697320776F7274682074776F20696E2074689D
+      	S117023C6520627573682E204561726C7920746F20626564DA
+      	S117025020616E64206561726C7920746F2072697365206DA3
+      	S1170264616B6573206120706572736F6E206865616C746810
+      	S1170278792C7765616C7468792C616E6420776973652E0066
+      	S103028C6E
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |
+      0200            000003 |main:
+      0200 A2 00      000004 |    LDX #0d
+                      000005 |    
+      0202            000006 |loop:
+      0202 BD 17 02   000007 |    LDA string1,x
+                      000008 |    
+      0205 C9 61      000009 |    CMP #61h
+      0207 90 06      000010 |    BCC store
+      0209 C9 7A      000011 |    CMP #7Ah
+      020B B0 02      000012 |    BCS store
+                      000013 |    
+      020D E9 21      000014 |    SBC #33d
+                      000015 |    
+      020F            000016 |store:
+      020F 9D 17 02   000017 |    STA string1,x
+      0212 E8         000018 |    INX
+                      000019 |    
+      0213 C9 00      000020 |    CMP #0d
+      0215 D0 EB      000021 |    BNE loop
+                      000022 |
+                      000023 |
+      0217            000024 |string1:
+      0217 41         000025 |	dbt "A bird in the hand is worth two in the bush. Early to bed and "
+      0218 20 62 69         
+      021B 72 64 20         
+      021E 69 6E 20         
+      0221 74 68 65         
+      0224 20 68 61         
+      0227 6E 64 20         
+      022A 69 73 20         
+      022D 77 6F 72         
+      0230 74 68 20         
+      0233 74 77 6F         
+      0236 20 69 6E         
+      0239 20 74 68         
+      023C 65 20 62         
+      023F 75 73 68         
+      0242 2E 20 45         
+      0245 61 72 6C         
+      0248 79 20 74         
+      024B 6F 20 62         
+      024E 65 64 20         
+      0251 61 6E 64         
+      0254 20               
+      0255 65         000026 |	dbt "early to rise makes a person healthy,wealthy,and wise."
+      0256 61 72 6C         
+      0259 79 20 74         
+      025C 6F 20 72         
+      025F 69 73 65         
+      0262 20 6D 61         
+      0265 6B 65 73         
+      0268 20 61 20         
+      026B 70 65 72         
+      026E 73 6F 6E         
+      0271 20 68 65         
+      0274 61 6C 74         
+      0277 68 79 2C         
+      027A 77 65 61         
+      027D 6C 74 68         
+      0280 79 2C 61         
+      0283 6E 64 20         
+      0286 77 69 73         
+      0289 65 2E            
+      028B 00         000027 |	dbt 0d
+                      000028 |	
+                      000029 |	end
+      
+      *** Symbol Table ***
+      {STORE=527, MAIN=512, LOOP=514, STRING1=535, =0}
+.   %/output
+
+
+
+
+======================================================================
+Program 3 (15 points).
+
+Write a program that exchanges the upper and lower nibbles in the 
+100 bytes that begin at "numbers".
+
+-d 0215 0278
+
+Issue: The bytes are not looped back (from the MSB to the LSB).
+1F -> F0
+4D -> D2
+38 -> 81
+4C -> C2
+23 -> 31
+
+%uasm65,title=""
+	org 0200h
+
+main:
+    LDX #0d
+    LDY #0d
+    
+loop:
+    ROL numbers,x
+    ROL numbers,x
+    ROL numbers,x
+    ROL numbers,x
+    
+    INX
+    CPX #100d
+    BNE loop
+
+numbers:
+	dbt 1Fh,4Dh,38h,4Ch,23h,D9h,FCh,36h,CFh,17h,35h,70h
+	dbt 8Fh,9Eh,20h,9Bh,27h,2Ch,7Bh,30h,E4h,7Ch,9Bh,89h
+	dbt EAh,78h,A0h,52h,28h,D5h,DCh,69h,88h,75h,80h,7Dh
+	dbt D7h,55h,9Dh,BCh,12h,D2h,7Fh,DEh,92h,11h,8Ah,E6h
+	dbt AFh,5Eh,89h,D4h,92h,5Ah,A2h,B8h,BBh,B6h,D8h,54h
+	dbt DBh,5Dh,58h,B9h,7Eh,CDh,72h,19h,2Ch,7Ch,77h,30h
+	dbt 7Ch,19h,6Eh,89h,B5h,66h,C2h,EFh,89h,96h,F3h,63h
+	dbt 82h,F0h,56h,DCh,9Ah,7Eh,FCh,29h,B4h,B3h,CDh,3Dh
+	dbt 58h,BEh,DCh,44h
+
+	end
+
+%/uasm65
+
+    %output,mpversion="347",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A200A0007E15027E15027E15027E1502E8E064D054
+      	S1170214EF1F4D384C23D9FC36CF1735708F9E209B272C7B84
+      	S117022830E47C9B89EA78A05228D5DC698875807DD7559DB1
+      	S117023CBC12D27FDE92118AE6AF5E89D4925AA2B8BBB6D8A1
+      	S117025054DB5D58B97ECD72192C7C77307C196E89B566C26B
+      	S1170264EF8996F36382F056DC9A7EFC29B4B3CD3D58BEDCDA
+      	S1040278443D
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+      0200            000001 |	org 0200h
+                      000002 |
+      0200            000003 |main:
+      0200 A2 00      000004 |    LDX #0d
+      0202 A0 00      000005 |    LDY #0d
+                      000006 |    
+      0204            000007 |loop:
+      0204 7E 15 02   000008 |    ROR numbers,x
+      0207 7E 15 02   000009 |    ROR numbers,x
+      020A 7E 15 02   000010 |    ROR numbers,x
+      020D 7E 15 02   000011 |    ROR numbers,x
+                      000012 |    
+      0210 E8         000013 |    INX
+      0211 E0 64      000014 |    CPX #100d
+      0213 D0 EF      000015 |    BNE loop
+                      000016 |
+      0215            000017 |numbers:
+      0215 1F         000018 |	dbt 1Fh,4Dh,38h,4Ch,23h,D9h,FCh,36h,CFh,17h,35h,70h
+      0216 4D               
+      0217 38               
+      0218 4C               
+      0219 23               
+      021A D9               
+      021B FC               
+      021C 36               
+      021D CF               
+      021E 17               
+      021F 35               
+      0220 70               
+      0221 8F         000019 |	dbt 8Fh,9Eh,20h,9Bh,27h,2Ch,7Bh,30h,E4h,7Ch,9Bh,89h
+      0222 9E               
+      0223 20               
+      0224 9B               
+      0225 27               
+      0226 2C               
+      0227 7B               
+      0228 30               
+      0229 E4               
+      022A 7C               
+      022B 9B               
+      022C 89               
+      022D EA         000020 |	dbt EAh,78h,A0h,52h,28h,D5h,DCh,69h,88h,75h,80h,7Dh
+      022E 78               
+      022F A0               
+      0230 52               
+      0231 28               
+      0232 D5               
+      0233 DC               
+      0234 69               
+      0235 88               
+      0236 75               
+      0237 80               
+      0238 7D               
+      0239 D7         000021 |	dbt D7h,55h,9Dh,BCh,12h,D2h,7Fh,DEh,92h,11h,8Ah,E6h
+      023A 55               
+      023B 9D               
+      023C BC               
+      023D 12               
+      023E D2               
+      023F 7F               
+      0240 DE               
+      0241 92               
+      0242 11               
+      0243 8A               
+      0244 E6               
+      0245 AF         000022 |	dbt AFh,5Eh,89h,D4h,92h,5Ah,A2h,B8h,BBh,B6h,D8h,54h
+      0246 5E               
+      0247 89               
+      0248 D4               
+      0249 92               
+      024A 5A               
+      024B A2               
+      024C B8               
+      024D BB               
+      024E B6               
+      024F D8               
+      0250 54               
+      0251 DB         000023 |	dbt DBh,5Dh,58h,B9h,7Eh,CDh,72h,19h,2Ch,7Ch,77h,30h
+      0252 5D               
+      0253 58               
+      0254 B9               
+      0255 7E               
+      0256 CD               
+      0257 72               
+      0258 19               
+      0259 2C               
+      025A 7C               
+      025B 77               
+      025C 30               
+      025D 7C         000024 |	dbt 7Ch,19h,6Eh,89h,B5h,66h,C2h,EFh,89h,96h,F3h,63h
+      025E 19               
+      025F 6E               
+      0260 89               
+      0261 B5               
+      0262 66               
+      0263 C2               
+      0264 EF               
+      0265 89               
+      0266 96               
+      0267 F3               
+      0268 63               
+      0269 82         000025 |	dbt 82h,F0h,56h,DCh,9Ah,7Eh,FCh,29h,B4h,B3h,CDh,3Dh
+      026A F0               
+      026B 56               
+      026C DC               
+      026D 9A               
+      026E 7E               
+      026F FC               
+      0270 29               
+      0271 B4               
+      0272 B3               
+      0273 CD               
+      0274 3D               
+      0275 58         000026 |	dbt 58h,BEh,DCh,44h
+      0276 BE               
+      0277 DC               
+      0278 44               
+                      000027 |
+                      000028 |	end
+      
+      *** Symbol Table ***
+      {MAIN=512, LOOP=516, NUMBERS=533, =0}
+.   %/output
+
+
+
+
+======================================================================
+Program 4 (15 points).
+
+Write a program that contains a subroutine that prints the string
+"A stitch in time saves nine." Have the main program call the subroutine
+3 times.
+
+
+%uasm65,title=""
+	org 0200h
+
+main:
+;Place your program code here.
+
+
+
+	end
+
+%/uasm65
+
+
+
+
+======================================================================
+Program 5 (15 points).
+
+Write a program that will sort the 100 integers starting at "numbers"
+into ascending order.
+
+%uasm65,title=""
+	org 0200h
+
+main:
+;Place your program code here.
+
+
+numbers:
+	dbt 59d,61d,37d,128d,71d,150d,195d,130d,69d,84d
+	dbt 171d,227d,99d,214d,233d,136d,80d,253d,242d
+	dbt 112d,221d,151d,101d,117d,76d,226d,174d,205d
+	dbt 84d,78d,139d,89d,195d,243d,69d,128d,217d,215d
+	dbt 57d,100d,227d,226d,233d,238d,229d,228d,135d
+	dbt 140d,98d,211d,245d,120d,206d,198d,47d,191d
+	dbt 239d,27d,236d,12d,242d,148d,98d,11d,38d,189d
+	dbt 238d,225d,142d,214d,214d,21d,75d,17d,190d
+	dbt 178d,123d,125d,123d,10d,166d,123d,135d,220d
+	dbt 193d,46d,248d,222d,63d,206d,197d,101d,144d
+	dbt 201d,233d,12d,241d,85d,180d,29d
+
+	end
+
+%/uasm65
+
+
+
+======================================================================
+Program 6 (25 points).
+
+Write a program that enables the user to use some of the switches that
+are at memory location A600 to move a single light around the 8x2 grid
+of LEDs that are formed by memory locations A200h and A400h.
+
+%uasm65,title=""
+	org 0200h
+
+
+	end
+
+%/uasm65
