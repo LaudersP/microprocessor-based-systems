@@ -1,20 +1,17 @@
-===============================================
-Assignment 2 Part 6
+%group,name="Problem 1",description="Bit across"
+========================================================================================================
+Problem 1
+
+Write a program that will turn each LED on at a time 
+in order to make sure the circuit is assembled correctly.
 
 %uasm65,title=""
-	org 0200h
+    org 0200h
 	
 main:
     LDA  #00000001b
     STA 0A200h
     
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     JSR Delay
     JSR Delay
     JSR Delay
@@ -30,25 +27,11 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     
     
     LDA  #00000100b
     STA 0A200h
     
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     JSR Delay
     JSR Delay
     JSR Delay
@@ -64,25 +47,11 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     
     
     LDA  #00010000b
     STA 0A200h
     
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     JSR Delay
     JSR Delay
     JSR Delay
@@ -98,25 +67,11 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     
     
     LDA  #01000000b
     STA 0A200h
     
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     JSR Delay
     JSR Delay
     JSR Delay
@@ -132,16 +87,212 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     
+    JMP main
     
-    LDA  #01000000b
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+
+	end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9018D00A220A30220A30220A30220A30220A30234
+      	S1170214A9028D00A220A30220A30220A30220A30220A3021F
+      	S1170228A9048D00A220A30220A30220A30220A30220A30209
+      	S117023CA9088D00A220A30220A30220A30220A30220A302F1
+      	S1170250A9108D00A220A30220A30220A30220A30220A302D5
+      	S1170264A9208D00A220A30220A30220A30220A30220A302B1
+      	S1170278A9408D00A220A30220A30220A30220A30220A3027D
+      	S117028CA9808D00A220A30220A30220A30220A30220A30229
+      	S11702A04C0002488A489848A9FFA2FFA0FF88F0FDCAD0F80F
+      	S10E02B438E901D0F168A868AA68606E
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |	
+      0200            000003 |main:
+      0200 A9 01      000004 |    LDA  #00000001b
+      0202 8D 00 A2   000005 |    STA 0A200h
+                      000006 |    
+      0205 20 A3 02   000007 |    JSR Delay
+      0208 20 A3 02   000008 |    JSR Delay
+      020B 20 A3 02   000009 |    JSR Delay
+      020E 20 A3 02   000010 |    JSR Delay
+      0211 20 A3 02   000011 |    JSR Delay
+                      000012 |    
+                      000013 |    
+      0214 A9 02      000014 |    LDA  #00000010b
+      0216 8D 00 A2   000015 |    STA 0A200h
+                      000016 |    
+      0219 20 A3 02   000017 |    JSR Delay
+      021C 20 A3 02   000018 |    JSR Delay
+      021F 20 A3 02   000019 |    JSR Delay
+      0222 20 A3 02   000020 |    JSR Delay
+      0225 20 A3 02   000021 |    JSR Delay
+                      000022 |    
+                      000023 |    
+      0228 A9 04      000024 |    LDA  #00000100b
+      022A 8D 00 A2   000025 |    STA 0A200h
+                      000026 |    
+      022D 20 A3 02   000027 |    JSR Delay
+      0230 20 A3 02   000028 |    JSR Delay
+      0233 20 A3 02   000029 |    JSR Delay
+      0236 20 A3 02   000030 |    JSR Delay
+      0239 20 A3 02   000031 |    JSR Delay
+                      000032 |    
+                      000033 |    
+      023C A9 08      000034 |    LDA  #00001000b
+      023E 8D 00 A2   000035 |    STA 0A200h
+                      000036 |    
+      0241 20 A3 02   000037 |    JSR Delay
+      0244 20 A3 02   000038 |    JSR Delay
+      0247 20 A3 02   000039 |    JSR Delay
+      024A 20 A3 02   000040 |    JSR Delay
+      024D 20 A3 02   000041 |    JSR Delay
+                      000042 |    
+                      000043 |    
+      0250 A9 10      000044 |    LDA  #00010000b
+      0252 8D 00 A2   000045 |    STA 0A200h
+                      000046 |    
+      0255 20 A3 02   000047 |    JSR Delay
+      0258 20 A3 02   000048 |    JSR Delay
+      025B 20 A3 02   000049 |    JSR Delay
+      025E 20 A3 02   000050 |    JSR Delay
+      0261 20 A3 02   000051 |    JSR Delay
+                      000052 |    
+                      000053 |    
+      0264 A9 20      000054 |    LDA  #00100000b
+      0266 8D 00 A2   000055 |    STA 0A200h
+                      000056 |    
+      0269 20 A3 02   000057 |    JSR Delay
+      026C 20 A3 02   000058 |    JSR Delay
+      026F 20 A3 02   000059 |    JSR Delay
+      0272 20 A3 02   000060 |    JSR Delay
+      0275 20 A3 02   000061 |    JSR Delay
+                      000062 |    
+                      000063 |    
+      0278 A9 40      000064 |    LDA  #01000000b
+      027A 8D 00 A2   000065 |    STA 0A200h
+                      000066 |    
+      027D 20 A3 02   000067 |    JSR Delay
+      0280 20 A3 02   000068 |    JSR Delay
+      0283 20 A3 02   000069 |    JSR Delay
+      0286 20 A3 02   000070 |    JSR Delay
+      0289 20 A3 02   000071 |    JSR Delay
+                      000072 |    
+                      000073 |    
+      028C A9 80      000074 |    LDA  #10000000b
+      028E 8D 00 A2   000075 |    STA 0A200h
+                      000076 |    
+      0291 20 A3 02   000077 |    JSR Delay
+      0294 20 A3 02   000078 |    JSR Delay
+      0297 20 A3 02   000079 |    JSR Delay
+      029A 20 A3 02   000080 |    JSR Delay
+      029D 20 A3 02   000081 |    JSR Delay
+                      000082 |    
+      02A0 4C 00 02   000083 |    JMP main
+                      000084 |    
+      02A3            000085 |Delay:
+      02A3 48         000086 |	pha
+      02A4 8A         000087 |	txa
+      02A5 48         000088 |	pha
+      02A6 98         000089 |	tya
+      02A7 48         000090 |	pha
+                      000091 |	
+      02A8 A9 FF      000092 |	lda #0FFh
+                      000093 |	
+      02AA            000094 |OutLoop:
+      02AA A2 FF      000095 |	ldx #0FFh
+                      000096 |
+      02AC            000097 |InLoop1:
+      02AC A0 FF      000098 |	ldy #0FFh
+                      000099 |
+      02AE            000100 |InLoop2:
+      02AE 88         000101 |	dey
+      02AF F0 FD      000102 |	beq InLoop2
+                      000103 |
+      02B1 CA         000104 |	dex
+      02B2 D0 F8      000105 |	bne InLoop1
+                      000106 |
+      02B4 38         000107 |	sec
+      02B5 E9 01      000108 |	sbc #1d
+      02B7 D0 F1      000109 |	bne OutLoop
+                      000110 |	
+                      000111 |;Restore registers from the stack.
+      02B9 68         000112 |	pla
+      02BA A8         000113 |	tay
+      02BB 68         000114 |	pla
+      02BC AA         000115 |	tax
+      02BD 68         000116 |	pla
+                      000117 |
+      02BE 60         000118 |	rts
+                      000119 |
+                      000120 |	end
+      
+      *** Symbol Table ***
+      {INLOOP1=684, OUTLOOP=682, DELAY=675, MAIN=512, INLOOP2=686, =0}
+.   %/output
+
+
+%/group
+
+    %output,parent="Problem 1",mpversion="346",preserve="false"
+      Test
+.   %/output
+
+%group,name="Problem 2",description="Byte flashing"
+========================================================================================================
+Problem 2
+
+Write a program that will turn bits 0 1 2 3 on while 
+turning bits 4 5 6 7 off, then turn bits 0 1 2 3 off 
+and bits 4 5 6 7 on.
+
+%uasm65,title=""
+    org 0200h
+   
+main:
+    LDA  #00001111b
     STA 0A200h
     
     JSR Delay
@@ -149,16 +300,9 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     
     
-    LDA  #00100000b
+    LDA  #11110000b
     STA 0A200h
     
     JSR Delay
@@ -166,16 +310,140 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     
+    JMP main
     
-    LDA  #00010000b
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+	
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A90F8D00A2202B02202B02202B02202B02202B027E
+      	S1170214A9F08D00A2202B02202B02202B02202B02202B0289
+      	S11702284C0002488A489848A9FFA2FFA0FF88F0FDCAD0F887
+      	S10E023C38E901D0F168A868AA6860E6
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |   
+      0200            000003 |main:
+      0200 A9 0F      000004 |    LDA  #00001111b
+      0202 8D 00 A2   000005 |    STA 0A200h
+                      000006 |    
+      0205 20 2B 02   000007 |    JSR Delay
+      0208 20 2B 02   000008 |    JSR Delay
+      020B 20 2B 02   000009 |    JSR Delay
+      020E 20 2B 02   000010 |    JSR Delay
+      0211 20 2B 02   000011 |    JSR Delay
+                      000012 |    
+                      000013 |    
+      0214 A9 F0      000014 |    LDA  #11110000b
+      0216 8D 00 A2   000015 |    STA 0A200h
+                      000016 |    
+      0219 20 2B 02   000017 |    JSR Delay
+      021C 20 2B 02   000018 |    JSR Delay
+      021F 20 2B 02   000019 |    JSR Delay
+      0222 20 2B 02   000020 |    JSR Delay
+      0225 20 2B 02   000021 |    JSR Delay
+                      000022 |    
+      0228 4C 00 02   000023 |    JMP main
+                      000024 |    
+      022B            000025 |Delay:
+      022B 48         000026 |	pha
+      022C 8A         000027 |	txa
+      022D 48         000028 |	pha
+      022E 98         000029 |	tya
+      022F 48         000030 |	pha
+                      000031 |	
+      0230 A9 FF      000032 |	lda #0FFh
+                      000033 |	
+      0232            000034 |OutLoop:
+      0232 A2 FF      000035 |	ldx #0FFh
+                      000036 |
+      0234            000037 |InLoop1:
+      0234 A0 FF      000038 |	ldy #0FFh
+                      000039 |
+      0236            000040 |InLoop2:
+      0236 88         000041 |	dey
+      0237 F0 FD      000042 |	beq InLoop2
+                      000043 |
+      0239 CA         000044 |	dex
+      023A D0 F8      000045 |	bne InLoop1
+                      000046 |
+      023C 38         000047 |	sec
+      023D E9 01      000048 |	sbc #1d
+      023F D0 F1      000049 |	bne OutLoop
+                      000050 |	
+                      000051 |;Restore registers from the stack.
+      0241 68         000052 |	pla
+      0242 A8         000053 |	tay
+      0243 68         000054 |	pla
+      0244 AA         000055 |	tax
+      0245 68         000056 |	pla
+                      000057 |
+      0246 60         000058 |	rts
+                      000059 |	
+                      000060 |    end
+      
+      *** Symbol Table ***
+      {INLOOP1=564, OUTLOOP=562, DELAY=555, MAIN=512, INLOOP2=566, =0}
+.   %/output
+%/group
+
+%group,name="Problem 3",description="Odd to Even"
+========================================================================================================
+Problem 3
+
+Write a program that will turn all even output port bits 
+on and all odd output port bits off, then turn all even 
+output port bits off and all odd output port bits on.
+
+%uasm65,title=""
+    org 0200h
+    
+main:
+    LDA  #10101010b
     STA 0A200h
     
     JSR Delay
@@ -183,16 +451,9 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     
     
-    LDA  #00001000b
+    LDA  #01010101b
     STA 0A200h
     
     JSR Delay
@@ -200,25 +461,142 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     
+    JMP main
     
-    LDA  #00000100b
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9AA8D00A2202B02202B02202B02202B02202B02E3
+      	S1170214A9558D00A2202B02202B02202B02202B02202B0224
+      	S11702284C0002488A489848A9FFA2FFA0FF88F0FDCAD0F887
+      	S10E023C38E901D0F168A868AA6860E6
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+      0200            000003 |main:
+      0200 A9 AA      000004 |    LDA  #10101010b
+      0202 8D 00 A2   000005 |    STA 0A200h
+                      000006 |    
+      0205 20 2B 02   000007 |    JSR Delay
+      0208 20 2B 02   000008 |    JSR Delay
+      020B 20 2B 02   000009 |    JSR Delay
+      020E 20 2B 02   000010 |    JSR Delay
+      0211 20 2B 02   000011 |    JSR Delay
+                      000012 |    
+                      000013 |    
+      0214 A9 55      000014 |    LDA  #01010101b
+      0216 8D 00 A2   000015 |    STA 0A200h
+                      000016 |    
+      0219 20 2B 02   000017 |    JSR Delay
+      021C 20 2B 02   000018 |    JSR Delay
+      021F 20 2B 02   000019 |    JSR Delay
+      0222 20 2B 02   000020 |    JSR Delay
+      0225 20 2B 02   000021 |    JSR Delay
+                      000022 |    
+      0228 4C 00 02   000023 |    JMP main
+                      000024 |    
+      022B            000025 |Delay:
+      022B 48         000026 |	pha
+      022C 8A         000027 |	txa
+      022D 48         000028 |	pha
+      022E 98         000029 |	tya
+      022F 48         000030 |	pha
+                      000031 |	
+      0230 A9 FF      000032 |	lda #0FFh
+                      000033 |	
+      0232            000034 |OutLoop:
+      0232 A2 FF      000035 |	ldx #0FFh
+                      000036 |
+      0234            000037 |InLoop1:
+      0234 A0 FF      000038 |	ldy #0FFh
+                      000039 |
+      0236            000040 |InLoop2:
+      0236 88         000041 |	dey
+      0237 F0 FD      000042 |	beq InLoop2
+                      000043 |
+      0239 CA         000044 |	dex
+      023A D0 F8      000045 |	bne InLoop1
+                      000046 |
+      023C 38         000047 |	sec
+      023D E9 01      000048 |	sbc #1d
+      023F D0 F1      000049 |	bne OutLoop
+                      000050 |	
+                      000051 |;Restore registers from the stack.
+      0241 68         000052 |	pla
+      0242 A8         000053 |	tay
+      0243 68         000054 |	pla
+      0244 AA         000055 |	tax
+      0245 68         000056 |	pla
+                      000057 |
+      0246 60         000058 |	rts
+                      000059 |    
+                      000060 |    end
+      
+      *** Symbol Table ***
+      {INLOOP1=564, OUTLOOP=562, DELAY=555, MAIN=512, INLOOP2=566, =0}
+.   %/output
+%/group
+
+%group,name="Problem 4",description="Bit back and forth"
+========================================================================================================
+Problem 4
+
+Write a program that will turn bit 0 of your output 
+port on then send this bit across the port to bit 7 
+then back to bit 0.
+
+%uasm65,title=""
+	org 0200h
+	
+main:
+    LDA  #00000001b
     STA 0A200h
     
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
-    JSR Delay
     JSR Delay
     JSR Delay
     JSR Delay
@@ -234,8 +612,121 @@ main:
     JSR Delay
     JSR Delay
     JSR Delay
+    
+    
+    LDA  #00000100b
+    STA 0A200h
+    
     JSR Delay
     JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00001000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00010000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00100000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #01000000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #10000000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #01000000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00100000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00010000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00001000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00000100b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00000010b
+    STA 0A200h
+    
     JSR Delay
     JSR Delay
     JSR Delay
@@ -288,40 +779,25 @@ InLoop2:
       
       %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
       	S00700005541534DC2
-      	S1170200A9018D00A220410420410420410420410420410414
-      	S1170214204104204104204104204104204104204104204113
-      	S117022804A9028D00A22041042041042041042041042041EB
-      	S117023C042041042041042041042041042041042041042028
-      	S11702504104A9048D00A220410420410420410420410420C1
-      	S11702644104204104204104204104204104204104204104DF
-      	S1170278204104A9088D00A220410420410420410420410495
-      	S117028C20410420410420410420410420410420410420419B
-      	S11702A004204104A9108D00A2204104204104204104204165
-      	S11702B40420410420410420410420410420410420410420B0
-      	S11702C84104204104A9208D00A2204104204104204104202D
-      	S11702DC410420410420410420410420410420410420410467
-      	S11702F0204104204104A9408D00A2204104204104204104E5
-      	S1170304204104204104204104204104204104204104204122
-      	S117031804204104204104A9808D00A220410420410420417C
-      	S117032C042041042041042041042041042041042041042037
-      	S11703404104204104204104A9408D00A22041042041042094
-      	S11703544104204104204104204104204104204104204104EE
-      	S1170368204104204104204104A9208D00A22041042041048C
-      	S117037C2041042041042041042041042041042041042041AA
-      	S117039004204104204104204104A9108D00A2204104204174
-      	S11703A40420410420410420410420410420410420410420BF
-      	S11703B84104204104204104204104A9088D00A22041042054
-      	S11703CC410420410420410420410420410420410420410476
-      	S11703E0204104204104204104204104A9048D00A220410430
-      	S11703F4204104204104204104204104204104204104204132
-      	S117040804204104204104204104204104A9028D00A2204109
-      	S117041C042041042041042041042041042041042041042046
-      	S117043041042041042041042041042041044C0002488A4873
-      	S11704449848A9FFA230A0FF88F0FDCAD0F838E901D0F16855
-      	S1080458A868AA686019
+      	S1170200A9018D00A2201B03201B03201B03201B03201B03D7
+      	S1170214A9028D00A2201B03201B03201B03201B03201B03C2
+      	S1170228A9048D00A2201B03201B03201B03201B03201B03AC
+      	S117023CA9088D00A2201B03201B03201B03201B03201B0394
+      	S1170250A9108D00A2201B03201B03201B03201B03201B0378
+      	S1170264A9208D00A2201B03201B03201B03201B03201B0354
+      	S1170278A9408D00A2201B03201B03201B03201B03201B0320
+      	S117028CA9808D00A2201B03201B03201B03201B03201B03CC
+      	S11702A0A9408D00A2201B03201B03201B03201B03201B03F8
+      	S11702B4A9208D00A2201B03201B03201B03201B03201B0304
+      	S11702C8A9108D00A2201B03201B03201B03201B03201B0300
+      	S11702DCA9088D00A2201B03201B03201B03201B03201B03F4
+      	S11702F0A9048D00A2201B03201B03201B03201B03201B03E4
+      	S1170304A9028D00A2201B03201B03201B03201B03201B03D1
+      	S11703184C0002488A489848A9FFA230A0FF88F0FDCAD0F865
+      	S10E032C38E901D0F168A868AA6860F5
       	S9030000FC
       %/s19
-       
+      
       *** List File ***
       
       0200            000001 |	org 0200h
@@ -330,280 +806,608 @@ InLoop2:
       0200 A9 01      000004 |    LDA  #00000001b
       0202 8D 00 A2   000005 |    STA 0A200h
                       000006 |    
-      0205 20 41 04   000007 |    JSR Delay
-      0208 20 41 04   000008 |    JSR Delay
-      020B 20 41 04   000009 |    JSR Delay
-      020E 20 41 04   000010 |    JSR Delay
-      0211 20 41 04   000011 |    JSR Delay
-      0214 20 41 04   000012 |    JSR Delay
-      0217 20 41 04   000013 |    JSR Delay
-      021A 20 41 04   000014 |    JSR Delay
-      021D 20 41 04   000015 |    JSR Delay
-      0220 20 41 04   000016 |    JSR Delay
-      0223 20 41 04   000017 |    JSR Delay
-      0226 20 41 04   000018 |    JSR Delay
-                      000019 |    
-                      000020 |    
-      0229 A9 02      000021 |    LDA  #00000010b
-      022B 8D 00 A2   000022 |    STA 0A200h
+      0205 20 1B 03   000007 |    JSR Delay
+      0208 20 1B 03   000008 |    JSR Delay
+      020B 20 1B 03   000009 |    JSR Delay
+      020E 20 1B 03   000010 |    JSR Delay
+      0211 20 1B 03   000011 |    JSR Delay
+                      000012 |    
+                      000013 |    
+      0214 A9 02      000014 |    LDA  #00000010b
+      0216 8D 00 A2   000015 |    STA 0A200h
+                      000016 |    
+      0219 20 1B 03   000017 |    JSR Delay
+      021C 20 1B 03   000018 |    JSR Delay
+      021F 20 1B 03   000019 |    JSR Delay
+      0222 20 1B 03   000020 |    JSR Delay
+      0225 20 1B 03   000021 |    JSR Delay
+                      000022 |    
                       000023 |    
-      022E 20 41 04   000024 |    JSR Delay
-      0231 20 41 04   000025 |    JSR Delay
-      0234 20 41 04   000026 |    JSR Delay
-      0237 20 41 04   000027 |    JSR Delay
-      023A 20 41 04   000028 |    JSR Delay
-      023D 20 41 04   000029 |    JSR Delay
-      0240 20 41 04   000030 |    JSR Delay
-      0243 20 41 04   000031 |    JSR Delay
-      0246 20 41 04   000032 |    JSR Delay
-      0249 20 41 04   000033 |    JSR Delay
-      024C 20 41 04   000034 |    JSR Delay
-      024F 20 41 04   000035 |    JSR Delay
+      0228 A9 04      000024 |    LDA  #00000100b
+      022A 8D 00 A2   000025 |    STA 0A200h
+                      000026 |    
+      022D 20 1B 03   000027 |    JSR Delay
+      0230 20 1B 03   000028 |    JSR Delay
+      0233 20 1B 03   000029 |    JSR Delay
+      0236 20 1B 03   000030 |    JSR Delay
+      0239 20 1B 03   000031 |    JSR Delay
+                      000032 |    
+                      000033 |    
+      023C A9 08      000034 |    LDA  #00001000b
+      023E 8D 00 A2   000035 |    STA 0A200h
                       000036 |    
-                      000037 |    
-      0252 A9 04      000038 |    LDA  #00000100b
-      0254 8D 00 A2   000039 |    STA 0A200h
-                      000040 |    
-      0257 20 41 04   000041 |    JSR Delay
-      025A 20 41 04   000042 |    JSR Delay
-      025D 20 41 04   000043 |    JSR Delay
-      0260 20 41 04   000044 |    JSR Delay
-      0263 20 41 04   000045 |    JSR Delay
-      0266 20 41 04   000046 |    JSR Delay
-      0269 20 41 04   000047 |    JSR Delay
-      026C 20 41 04   000048 |    JSR Delay
-      026F 20 41 04   000049 |    JSR Delay
-      0272 20 41 04   000050 |    JSR Delay
-      0275 20 41 04   000051 |    JSR Delay
-      0278 20 41 04   000052 |    JSR Delay
+      0241 20 1B 03   000037 |    JSR Delay
+      0244 20 1B 03   000038 |    JSR Delay
+      0247 20 1B 03   000039 |    JSR Delay
+      024A 20 1B 03   000040 |    JSR Delay
+      024D 20 1B 03   000041 |    JSR Delay
+                      000042 |    
+                      000043 |    
+      0250 A9 10      000044 |    LDA  #00010000b
+      0252 8D 00 A2   000045 |    STA 0A200h
+                      000046 |    
+      0255 20 1B 03   000047 |    JSR Delay
+      0258 20 1B 03   000048 |    JSR Delay
+      025B 20 1B 03   000049 |    JSR Delay
+      025E 20 1B 03   000050 |    JSR Delay
+      0261 20 1B 03   000051 |    JSR Delay
+                      000052 |    
                       000053 |    
-                      000054 |    
-      027B A9 08      000055 |    LDA  #00001000b
-      027D 8D 00 A2   000056 |    STA 0A200h
-                      000057 |    
-      0280 20 41 04   000058 |    JSR Delay
-      0283 20 41 04   000059 |    JSR Delay
-      0286 20 41 04   000060 |    JSR Delay
-      0289 20 41 04   000061 |    JSR Delay
-      028C 20 41 04   000062 |    JSR Delay
-      028F 20 41 04   000063 |    JSR Delay
-      0292 20 41 04   000064 |    JSR Delay
-      0295 20 41 04   000065 |    JSR Delay
-      0298 20 41 04   000066 |    JSR Delay
-      029B 20 41 04   000067 |    JSR Delay
-      029E 20 41 04   000068 |    JSR Delay
-      02A1 20 41 04   000069 |    JSR Delay
-                      000070 |    
-                      000071 |    
-      02A4 A9 10      000072 |    LDA  #00010000b
-      02A6 8D 00 A2   000073 |    STA 0A200h
-                      000074 |    
-      02A9 20 41 04   000075 |    JSR Delay
-      02AC 20 41 04   000076 |    JSR Delay
-      02AF 20 41 04   000077 |    JSR Delay
-      02B2 20 41 04   000078 |    JSR Delay
-      02B5 20 41 04   000079 |    JSR Delay
-      02B8 20 41 04   000080 |    JSR Delay
-      02BB 20 41 04   000081 |    JSR Delay
-      02BE 20 41 04   000082 |    JSR Delay
-      02C1 20 41 04   000083 |    JSR Delay
-      02C4 20 41 04   000084 |    JSR Delay
-      02C7 20 41 04   000085 |    JSR Delay
-      02CA 20 41 04   000086 |    JSR Delay
-                      000087 |    
-                      000088 |    
-      02CD A9 20      000089 |    LDA  #00100000b
-      02CF 8D 00 A2   000090 |    STA 0A200h
-                      000091 |    
-      02D2 20 41 04   000092 |    JSR Delay
-      02D5 20 41 04   000093 |    JSR Delay
-      02D8 20 41 04   000094 |    JSR Delay
-      02DB 20 41 04   000095 |    JSR Delay
-      02DE 20 41 04   000096 |    JSR Delay
-      02E1 20 41 04   000097 |    JSR Delay
-      02E4 20 41 04   000098 |    JSR Delay
-      02E7 20 41 04   000099 |    JSR Delay
-      02EA 20 41 04   000100 |    JSR Delay
-      02ED 20 41 04   000101 |    JSR Delay
-      02F0 20 41 04   000102 |    JSR Delay
-      02F3 20 41 04   000103 |    JSR Delay
-                      000104 |    
-                      000105 |    
-      02F6 A9 40      000106 |    LDA  #01000000b
-      02F8 8D 00 A2   000107 |    STA 0A200h
-                      000108 |    
-      02FB 20 41 04   000109 |    JSR Delay
-      02FE 20 41 04   000110 |    JSR Delay
-      0301 20 41 04   000111 |    JSR Delay
-      0304 20 41 04   000112 |    JSR Delay
-      0307 20 41 04   000113 |    JSR Delay
-      030A 20 41 04   000114 |    JSR Delay
-      030D 20 41 04   000115 |    JSR Delay
-      0310 20 41 04   000116 |    JSR Delay
-      0313 20 41 04   000117 |    JSR Delay
-      0316 20 41 04   000118 |    JSR Delay
-      0319 20 41 04   000119 |    JSR Delay
-      031C 20 41 04   000120 |    JSR Delay
-                      000121 |    
+      0264 A9 20      000054 |    LDA  #00100000b
+      0266 8D 00 A2   000055 |    STA 0A200h
+                      000056 |    
+      0269 20 1B 03   000057 |    JSR Delay
+      026C 20 1B 03   000058 |    JSR Delay
+      026F 20 1B 03   000059 |    JSR Delay
+      0272 20 1B 03   000060 |    JSR Delay
+      0275 20 1B 03   000061 |    JSR Delay
+                      000062 |    
+                      000063 |    
+      0278 A9 40      000064 |    LDA  #01000000b
+      027A 8D 00 A2   000065 |    STA 0A200h
+                      000066 |    
+      027D 20 1B 03   000067 |    JSR Delay
+      0280 20 1B 03   000068 |    JSR Delay
+      0283 20 1B 03   000069 |    JSR Delay
+      0286 20 1B 03   000070 |    JSR Delay
+      0289 20 1B 03   000071 |    JSR Delay
+                      000072 |    
+                      000073 |    
+      028C A9 80      000074 |    LDA  #10000000b
+      028E 8D 00 A2   000075 |    STA 0A200h
+                      000076 |    
+      0291 20 1B 03   000077 |    JSR Delay
+      0294 20 1B 03   000078 |    JSR Delay
+      0297 20 1B 03   000079 |    JSR Delay
+      029A 20 1B 03   000080 |    JSR Delay
+      029D 20 1B 03   000081 |    JSR Delay
+                      000082 |    
+                      000083 |    
+      02A0 A9 40      000084 |    LDA  #01000000b
+      02A2 8D 00 A2   000085 |    STA 0A200h
+                      000086 |    
+      02A5 20 1B 03   000087 |    JSR Delay
+      02A8 20 1B 03   000088 |    JSR Delay
+      02AB 20 1B 03   000089 |    JSR Delay
+      02AE 20 1B 03   000090 |    JSR Delay
+      02B1 20 1B 03   000091 |    JSR Delay
+                      000092 |    
+                      000093 |    
+      02B4 A9 20      000094 |    LDA  #00100000b
+      02B6 8D 00 A2   000095 |    STA 0A200h
+                      000096 |    
+      02B9 20 1B 03   000097 |    JSR Delay
+      02BC 20 1B 03   000098 |    JSR Delay
+      02BF 20 1B 03   000099 |    JSR Delay
+      02C2 20 1B 03   000100 |    JSR Delay
+      02C5 20 1B 03   000101 |    JSR Delay
+                      000102 |    
+                      000103 |    
+      02C8 A9 10      000104 |    LDA  #00010000b
+      02CA 8D 00 A2   000105 |    STA 0A200h
+                      000106 |    
+      02CD 20 1B 03   000107 |    JSR Delay
+      02D0 20 1B 03   000108 |    JSR Delay
+      02D3 20 1B 03   000109 |    JSR Delay
+      02D6 20 1B 03   000110 |    JSR Delay
+      02D9 20 1B 03   000111 |    JSR Delay
+                      000112 |    
+                      000113 |    
+      02DC A9 08      000114 |    LDA  #00001000b
+      02DE 8D 00 A2   000115 |    STA 0A200h
+                      000116 |    
+      02E1 20 1B 03   000117 |    JSR Delay
+      02E4 20 1B 03   000118 |    JSR Delay
+      02E7 20 1B 03   000119 |    JSR Delay
+      02EA 20 1B 03   000120 |    JSR Delay
+      02ED 20 1B 03   000121 |    JSR Delay
                       000122 |    
-      031F A9 80      000123 |    LDA  #10000000b
-      0321 8D 00 A2   000124 |    STA 0A200h
-                      000125 |    
-      0324 20 41 04   000126 |    JSR Delay
-      0327 20 41 04   000127 |    JSR Delay
-      032A 20 41 04   000128 |    JSR Delay
-      032D 20 41 04   000129 |    JSR Delay
-      0330 20 41 04   000130 |    JSR Delay
-      0333 20 41 04   000131 |    JSR Delay
-      0336 20 41 04   000132 |    JSR Delay
-      0339 20 41 04   000133 |    JSR Delay
-      033C 20 41 04   000134 |    JSR Delay
-      033F 20 41 04   000135 |    JSR Delay
-      0342 20 41 04   000136 |    JSR Delay
-      0345 20 41 04   000137 |    JSR Delay
-                      000138 |    
-                      000139 |    
-      0348 A9 40      000140 |    LDA  #01000000b
-      034A 8D 00 A2   000141 |    STA 0A200h
+                      000123 |    
+      02F0 A9 04      000124 |    LDA  #00000100b
+      02F2 8D 00 A2   000125 |    STA 0A200h
+                      000126 |    
+      02F5 20 1B 03   000127 |    JSR Delay
+      02F8 20 1B 03   000128 |    JSR Delay
+      02FB 20 1B 03   000129 |    JSR Delay
+      02FE 20 1B 03   000130 |    JSR Delay
+      0301 20 1B 03   000131 |    JSR Delay
+                      000132 |    
+                      000133 |    
+      0304 A9 02      000134 |    LDA  #00000010b
+      0306 8D 00 A2   000135 |    STA 0A200h
+                      000136 |    
+      0309 20 1B 03   000137 |    JSR Delay
+      030C 20 1B 03   000138 |    JSR Delay
+      030F 20 1B 03   000139 |    JSR Delay
+      0312 20 1B 03   000140 |    JSR Delay
+      0315 20 1B 03   000141 |    JSR Delay
                       000142 |    
-      034D 20 41 04   000143 |    JSR Delay
-      0350 20 41 04   000144 |    JSR Delay
-      0353 20 41 04   000145 |    JSR Delay
-      0356 20 41 04   000146 |    JSR Delay
-      0359 20 41 04   000147 |    JSR Delay
-      035C 20 41 04   000148 |    JSR Delay
-      035F 20 41 04   000149 |    JSR Delay
-      0362 20 41 04   000150 |    JSR Delay
-      0365 20 41 04   000151 |    JSR Delay
-      0368 20 41 04   000152 |    JSR Delay
-      036B 20 41 04   000153 |    JSR Delay
-      036E 20 41 04   000154 |    JSR Delay
-                      000155 |    
-                      000156 |    
-      0371 A9 20      000157 |    LDA  #00100000b
-      0373 8D 00 A2   000158 |    STA 0A200h
-                      000159 |    
-      0376 20 41 04   000160 |    JSR Delay
-      0379 20 41 04   000161 |    JSR Delay
-      037C 20 41 04   000162 |    JSR Delay
-      037F 20 41 04   000163 |    JSR Delay
-      0382 20 41 04   000164 |    JSR Delay
-      0385 20 41 04   000165 |    JSR Delay
-      0388 20 41 04   000166 |    JSR Delay
-      038B 20 41 04   000167 |    JSR Delay
-      038E 20 41 04   000168 |    JSR Delay
-      0391 20 41 04   000169 |    JSR Delay
-      0394 20 41 04   000170 |    JSR Delay
-      0397 20 41 04   000171 |    JSR Delay
-                      000172 |    
-                      000173 |    
-      039A A9 10      000174 |    LDA  #00010000b
-      039C 8D 00 A2   000175 |    STA 0A200h
-                      000176 |    
-      039F 20 41 04   000177 |    JSR Delay
-      03A2 20 41 04   000178 |    JSR Delay
-      03A5 20 41 04   000179 |    JSR Delay
-      03A8 20 41 04   000180 |    JSR Delay
-      03AB 20 41 04   000181 |    JSR Delay
-      03AE 20 41 04   000182 |    JSR Delay
-      03B1 20 41 04   000183 |    JSR Delay
-      03B4 20 41 04   000184 |    JSR Delay
-      03B7 20 41 04   000185 |    JSR Delay
-      03BA 20 41 04   000186 |    JSR Delay
-      03BD 20 41 04   000187 |    JSR Delay
-      03C0 20 41 04   000188 |    JSR Delay
-                      000189 |    
-                      000190 |    
-      03C3 A9 08      000191 |    LDA  #00001000b
-      03C5 8D 00 A2   000192 |    STA 0A200h
-                      000193 |    
-      03C8 20 41 04   000194 |    JSR Delay
-      03CB 20 41 04   000195 |    JSR Delay
-      03CE 20 41 04   000196 |    JSR Delay
-      03D1 20 41 04   000197 |    JSR Delay
-      03D4 20 41 04   000198 |    JSR Delay
-      03D7 20 41 04   000199 |    JSR Delay
-      03DA 20 41 04   000200 |    JSR Delay
-      03DD 20 41 04   000201 |    JSR Delay
-      03E0 20 41 04   000202 |    JSR Delay
-      03E3 20 41 04   000203 |    JSR Delay
-      03E6 20 41 04   000204 |    JSR Delay
-      03E9 20 41 04   000205 |    JSR Delay
-                      000206 |    
-                      000207 |    
-      03EC A9 04      000208 |    LDA  #00000100b
-      03EE 8D 00 A2   000209 |    STA 0A200h
-                      000210 |    
-      03F1 20 41 04   000211 |    JSR Delay
-      03F4 20 41 04   000212 |    JSR Delay
-      03F7 20 41 04   000213 |    JSR Delay
-      03FA 20 41 04   000214 |    JSR Delay
-      03FD 20 41 04   000215 |    JSR Delay
-      0400 20 41 04   000216 |    JSR Delay
-      0403 20 41 04   000217 |    JSR Delay
-      0406 20 41 04   000218 |    JSR Delay
-      0409 20 41 04   000219 |    JSR Delay
-      040C 20 41 04   000220 |    JSR Delay
-      040F 20 41 04   000221 |    JSR Delay
-      0412 20 41 04   000222 |    JSR Delay
-                      000223 |    
-                      000224 |    
-      0415 A9 02      000225 |    LDA  #00000010b
-      0417 8D 00 A2   000226 |    STA 0A200h
-                      000227 |    
-      041A 20 41 04   000228 |    JSR Delay
-      041D 20 41 04   000229 |    JSR Delay
-      0420 20 41 04   000230 |    JSR Delay
-      0423 20 41 04   000231 |    JSR Delay
-      0426 20 41 04   000232 |    JSR Delay
-      0429 20 41 04   000233 |    JSR Delay
-      042C 20 41 04   000234 |    JSR Delay
-      042F 20 41 04   000235 |    JSR Delay
-      0432 20 41 04   000236 |    JSR Delay
-      0435 20 41 04   000237 |    JSR Delay
-      0438 20 41 04   000238 |    JSR Delay
-      043B 20 41 04   000239 |    JSR Delay
-                      000240 |    
-      043E 4C 00 02   000241 |    JMP main
-                      000242 |    
-      0441            000243 |Delay:
-      0441 48         000244 |	pha
-      0442 8A         000245 |	txa
-      0443 48         000246 |	pha
-      0444 98         000247 |	tya
-      0445 48         000248 |	pha
-                      000249 |	
-      0446 A9 FF      000250 |	lda #0FFh
-                      000251 |	
-      0448            000252 |OutLoop:
-      0448 A2 30      000253 |	ldx #030h
-                      000254 |
-      044A            000255 |InLoop1:
-      044A A0 FF      000256 |	ldy #0FFh
-                      000257 |
-      044C            000258 |InLoop2:
-      044C 88         000259 |	dey
-      044D F0 FD      000260 |	beq InLoop2
-                      000261 |
-      044F CA         000262 |	dex
-      0450 D0 F8      000263 |	bne InLoop1
-                      000264 |
-      0452 38         000265 |	sec
-      0453 E9 01      000266 |	sbc #1d
-      0455 D0 F1      000267 |	bne OutLoop
-                      000268 |	
-                      000269 |;Restore registers from the stack.
-      0457 68         000270 |	pla
-      0458 A8         000271 |	tay
-      0459 68         000272 |	pla
-      045A AA         000273 |	tax
-      045B 68         000274 |	pla
-                      000275 |
-      045C 60         000276 |	rts
-                      000277 |
-                      000278 |	end
+      0318 4C 00 02   000143 |    JMP main
+                      000144 |    
+      031B            000145 |Delay:
+      031B 48         000146 |	pha
+      031C 8A         000147 |	txa
+      031D 48         000148 |	pha
+      031E 98         000149 |	tya
+      031F 48         000150 |	pha
+                      000151 |	
+      0320 A9 FF      000152 |	lda #0FFh
+                      000153 |	
+      0322            000154 |OutLoop:
+      0322 A2 30      000155 |	ldx #030h
+                      000156 |
+      0324            000157 |InLoop1:
+      0324 A0 FF      000158 |	ldy #0FFh
+                      000159 |
+      0326            000160 |InLoop2:
+      0326 88         000161 |	dey
+      0327 F0 FD      000162 |	beq InLoop2
+                      000163 |
+      0329 CA         000164 |	dex
+      032A D0 F8      000165 |	bne InLoop1
+                      000166 |
+      032C 38         000167 |	sec
+      032D E9 01      000168 |	sbc #1d
+      032F D0 F1      000169 |	bne OutLoop
+                      000170 |	
+                      000171 |;Restore registers from the stack.
+      0331 68         000172 |	pla
+      0332 A8         000173 |	tay
+      0333 68         000174 |	pla
+      0334 AA         000175 |	tax
+      0335 68         000176 |	pla
+                      000177 |
+      0336 60         000178 |	rts
+                      000179 |
+                      000180 |	end
       
       *** Symbol Table ***
-      {INLOOP1=1098, OUTLOOP=1096, DELAY=1089, MAIN=512, INLOOP2=1100, =0}
+      {INLOOP1=804, OUTLOOP=802, DELAY=795, MAIN=512, INLOOP2=806, =0}
 .   %/output
 
+    %output,parent="Problem 6",mpversion="346",preserve="false"
+      Test
+.   %/output
+%/group
+
+%group,name="Problem 5",description="Out to in"
+========================================================================================================
+Problem 5
+
+Write a program that will turn bits 0 and 7 in the 
+output port on, move these bits to bit positions 
+3 and 4 then back out again to bit positions 0 
+and 7. Only 2 LEDs should be on at a time.
+
+%uasm65,title=""
+    org 0200h
+    
+main:
+    LDA  #10000001b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    
+    LDA  #00011000b
+    STA 0A200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    JMP main
+    
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9818D00A2202B02202B02202B02202B02202B020C
+      	S1170214A9188D00A2202B02202B02202B02202B02202B0261
+      	S11702284C0002488A489848A9FFA2FFA0FF88F0FDCAD0F887
+      	S10E023C38E901D0F168A868AA6860E6
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+      0200            000003 |main:
+      0200 A9 81      000004 |    LDA  #10000001b
+      0202 8D 00 A2   000005 |    STA 0A200h
+                      000006 |    
+      0205 20 2B 02   000007 |    JSR Delay
+      0208 20 2B 02   000008 |    JSR Delay
+      020B 20 2B 02   000009 |    JSR Delay
+      020E 20 2B 02   000010 |    JSR Delay
+      0211 20 2B 02   000011 |    JSR Delay
+                      000012 |    
+                      000013 |    
+      0214 A9 18      000014 |    LDA  #00011000b
+      0216 8D 00 A2   000015 |    STA 0A200h
+                      000016 |    
+      0219 20 2B 02   000017 |    JSR Delay
+      021C 20 2B 02   000018 |    JSR Delay
+      021F 20 2B 02   000019 |    JSR Delay
+      0222 20 2B 02   000020 |    JSR Delay
+      0225 20 2B 02   000021 |    JSR Delay
+                      000022 |    
+      0228 4C 00 02   000023 |    JMP main
+                      000024 |    
+      022B            000025 |Delay:
+      022B 48         000026 |	pha
+      022C 8A         000027 |	txa
+      022D 48         000028 |	pha
+      022E 98         000029 |	tya
+      022F 48         000030 |	pha
+                      000031 |	
+      0230 A9 FF      000032 |	lda #0FFh
+                      000033 |	
+      0232            000034 |OutLoop:
+      0232 A2 FF      000035 |	ldx #0FFh
+                      000036 |
+      0234            000037 |InLoop1:
+      0234 A0 FF      000038 |	ldy #0FFh
+                      000039 |
+      0236            000040 |InLoop2:
+      0236 88         000041 |	dey
+      0237 F0 FD      000042 |	beq InLoop2
+                      000043 |
+      0239 CA         000044 |	dex
+      023A D0 F8      000045 |	bne InLoop1
+                      000046 |
+      023C 38         000047 |	sec
+      023D E9 01      000048 |	sbc #1d
+      023F D0 F1      000049 |	bne OutLoop
+                      000050 |	
+                      000051 |;Restore registers from the stack.
+      0241 68         000052 |	pla
+      0242 A8         000053 |	tay
+      0243 68         000054 |	pla
+      0244 AA         000055 |	tax
+      0245 68         000056 |	pla
+                      000057 |
+      0246 60         000058 |	rts
+                      000059 |    
+                      000060 |    end
+      
+      *** Symbol Table ***
+      {INLOOP1=564, OUTLOOP=562, DELAY=555, MAIN=512, INLOOP2=566, =0}
+.   %/output
+%/group
+
+%group,name="Problem 6",description="Increasing 0x00 to 0xFF"
+========================================================================================================
+Problem 6
+
+Write a program that will make your output port 
+count from 0h to 0FFh then start over again at 0.
+
+%uasm65,title=""
+    org 0200h
+    
+    LDX #0h
+    
+main:
+    JSR Delay
+    JSR Delay
+    
+    STX 0a200h
+    INX
+    
+    CPX #0FFh
+    BNE main
+    
+    LDX #0h
+    jmp main
+    
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A2002015022015028E00A2E8E0FFD0F2A2004C022D
+      	S117021402488A489848A9FFA2FFA0FF88F0FDCAD0F838E9C6
+      	S10C022801D0F168A868AA68601D
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+      0200 A2 00      000003 |    LDX #0h
+                      000004 |    
+      0202            000005 |main:
+      0202 20 15 02   000006 |    JSR Delay
+      0205 20 15 02   000007 |    JSR Delay
+                      000008 |    
+      0208 8E 00 A2   000009 |    STX 0a200h
+      020B E8         000010 |    INX
+                      000011 |    
+      020C E0 FF      000012 |    CPX #0FFh
+      020E D0 F2      000013 |    BNE main
+                      000014 |    
+      0210 A2 00      000015 |    LDX #0h
+      0212 4C 02 02   000016 |    jmp main
+                      000017 |    
+      0215            000018 |Delay:
+      0215 48         000019 |	pha
+      0216 8A         000020 |	txa
+      0217 48         000021 |	pha
+      0218 98         000022 |	tya
+      0219 48         000023 |	pha
+                      000024 |	
+      021A A9 FF      000025 |	lda #0FFh
+                      000026 |	
+      021C            000027 |OutLoop:
+      021C A2 FF      000028 |	ldx #0FFh
+                      000029 |
+      021E            000030 |InLoop1:
+      021E A0 FF      000031 |	ldy #0FFh
+                      000032 |
+      0220            000033 |InLoop2:
+      0220 88         000034 |	dey
+      0221 F0 FD      000035 |	beq InLoop2
+                      000036 |
+      0223 CA         000037 |	dex
+      0224 D0 F8      000038 |	bne InLoop1
+                      000039 |
+      0226 38         000040 |	sec
+      0227 E9 01      000041 |	sbc #1d
+      0229 D0 F1      000042 |	bne OutLoop
+                      000043 |	
+                      000044 |;Restore registers from the stack.
+      022B 68         000045 |	pla
+      022C A8         000046 |	tay
+      022D 68         000047 |	pla
+      022E AA         000048 |	tax
+      022F 68         000049 |	pla
+                      000050 |
+      0230 60         000051 |	rts
+                      000052 |    
+                      000053 |    end
+      
+      *** Symbol Table ***
+      {INLOOP1=542, OUTLOOP=540, DELAY=533, MAIN=514, INLOOP2=544, =0}
+.   %/output
+%/group
+
+%group,name="Problem 7",description="20Hz Square Wave"
+========================================================================================================
+Problem 7
+
+Write a program that will make your output port 
+count from 0h to 0FFh then start over again at 0.
+
+%uasm65,title=""
+    org 0200h
+    
+    LDX #0h
+    
+main:
+    JSR Delay
+    JSR Delay
+    
+    STX 0a200h
+    INX
+    
+    CPX #0FFh
+    BNE main
+    
+    LDX #0h
+    jmp main
+    
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A2002015022015028E00A2E8E0FFD0F2A2004C022D
+      	S117021402488A489848A9FFA2FFA0FF88F0FDCAD0F838E9C6
+      	S10C022801D0F168A868AA68601D
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+      0200 A2 00      000003 |    LDX #0h
+                      000004 |    
+      0202            000005 |main:
+      0202 20 15 02   000006 |    JSR Delay
+      0205 20 15 02   000007 |    JSR Delay
+                      000008 |    
+      0208 8E 00 A2   000009 |    STX 0a200h
+      020B E8         000010 |    INX
+                      000011 |    
+      020C E0 FF      000012 |    CPX #0FFh
+      020E D0 F2      000013 |    BNE main
+                      000014 |    
+      0210 A2 00      000015 |    LDX #0h
+      0212 4C 02 02   000016 |    jmp main
+                      000017 |    
+      0215            000018 |Delay:
+      0215 48         000019 |	pha
+      0216 8A         000020 |	txa
+      0217 48         000021 |	pha
+      0218 98         000022 |	tya
+      0219 48         000023 |	pha
+                      000024 |	
+      021A A9 FF      000025 |	lda #0FFh
+                      000026 |	
+      021C            000027 |OutLoop:
+      021C A2 FF      000028 |	ldx #0FFh
+                      000029 |
+      021E            000030 |InLoop1:
+      021E A0 FF      000031 |	ldy #0FFh
+                      000032 |
+      0220            000033 |InLoop2:
+      0220 88         000034 |	dey
+      0221 F0 FD      000035 |	beq InLoop2
+                      000036 |
+      0223 CA         000037 |	dex
+      0224 D0 F8      000038 |	bne InLoop1
+                      000039 |
+      0226 38         000040 |	sec
+      0227 E9 01      000041 |	sbc #1d
+      0229 D0 F1      000042 |	bne OutLoop
+                      000043 |	
+                      000044 |;Restore registers from the stack.
+      022B 68         000045 |	pla
+      022C A8         000046 |	tay
+      022D 68         000047 |	pla
+      022E AA         000048 |	tax
+      022F 68         000049 |	pla
+                      000050 |
+      0230 60         000051 |	rts
+                      000052 |    
+                      000053 |    end
+      
+      *** Symbol Table ***
+      {INLOOP1=542, OUTLOOP=540, DELAY=533, MAIN=514, INLOOP2=544, =0}
+.   %/output
+%/group
