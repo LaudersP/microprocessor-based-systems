@@ -274,11 +274,11 @@ InLoop2:
 .   %/output
 
 
-%/group
 
     %output,parent="Problem 1",mpversion="346",preserve="false"
       Test
 .   %/output
+%/group
 
 %group,name="Problem 2",description="Byte flashing"
 ========================================================================================================
@@ -1281,27 +1281,31 @@ InLoop2:
 ========================================================================================================
 Problem 7
 
-Write a program that will make your output port 
-count from 0h to 0FFh then start over again at 0.
+Write a program that will output a 20 Hz square wave 
+on PA0. Verify this frequency with an oscilloscope.
 
 %uasm65,title=""
     org 0200h
     
-    LDX #0h
+    LDA #10b
     
 main:
+    LDA  #00000001b
+    STA 0A200h
+    
+    JSR Delay 
+    JSR Delay
+    
+    
+    LDA  #00000000b
+    STA 0A200h
+    
     JSR Delay
     JSR Delay
     
-    STX 0a200h
-    INX
-    
-    CPX #0FFh
-    BNE main
-    
-    LDX #0h
-    jmp main
-    
+    JMP main
+  
+; 100ms delay
 Delay:
 	pha
 	txa
@@ -1309,7 +1313,7 @@ Delay:
 	tya
 	pha
 	
-	lda #0FFh
+	lda #0D7h
 	
 OutLoop:
 	ldx #0FFh
@@ -1345,9 +1349,9 @@ InLoop2:
       
       %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
       	S00700005541534DC2
-      	S1170200A2002015022015028E00A2E8E0FFD0F2A2004C022D
-      	S117021402488A489848A9FFA2FFA0FF88F0FDCAD0F838E9C6
-      	S10C022801D0F168A868AA68601D
+      	S1170200A902A9018D00A2201B02201B02A9008D00A2201BD5
+      	S117021402201B024C0202488A489848A9D7A2FFA0FF88F011
+      	S1120228FDCAD0F838E901D0F168A868AA686067
       	S9030000FC
       %/s19
       
@@ -1355,59 +1359,63 @@ InLoop2:
       
       0200            000001 |    org 0200h
                       000002 |    
-      0200 A2 00      000003 |    LDX #0h
+      0200 A9 02      000003 |    LDA #10b
                       000004 |    
       0202            000005 |main:
-      0202 20 15 02   000006 |    JSR Delay
-      0205 20 15 02   000007 |    JSR Delay
+      0202 A9 01      000006 |    LDA  #00000001b
+      0204 8D 00 A2   000007 |    STA 0A200h
                       000008 |    
-      0208 8E 00 A2   000009 |    STX 0a200h
-      020B E8         000010 |    INX
+      0207 20 1B 02   000009 |    JSR Delay 
+      020A 20 1B 02   000010 |    JSR Delay
                       000011 |    
-      020C E0 FF      000012 |    CPX #0FFh
-      020E D0 F2      000013 |    BNE main
-                      000014 |    
-      0210 A2 00      000015 |    LDX #0h
-      0212 4C 02 02   000016 |    jmp main
-                      000017 |    
-      0215            000018 |Delay:
-      0215 48         000019 |	pha
-      0216 8A         000020 |	txa
-      0217 48         000021 |	pha
-      0218 98         000022 |	tya
-      0219 48         000023 |	pha
-                      000024 |	
-      021A A9 FF      000025 |	lda #0FFh
-                      000026 |	
-      021C            000027 |OutLoop:
-      021C A2 FF      000028 |	ldx #0FFh
-                      000029 |
-      021E            000030 |InLoop1:
-      021E A0 FF      000031 |	ldy #0FFh
-                      000032 |
-      0220            000033 |InLoop2:
-      0220 88         000034 |	dey
-      0221 F0 FD      000035 |	beq InLoop2
+                      000012 |    
+      020D A9 00      000013 |    LDA  #00000000b
+      020F 8D 00 A2   000014 |    STA 0A200h
+                      000015 |    
+      0212 20 1B 02   000016 |    JSR Delay
+      0215 20 1B 02   000017 |    JSR Delay
+                      000018 |    
+      0218 4C 02 02   000019 |    JMP main
+                      000020 |  
+                      000021 |; 100ms delay
+      021B            000022 |Delay:
+      021B 48         000023 |	pha
+      021C 8A         000024 |	txa
+      021D 48         000025 |	pha
+      021E 98         000026 |	tya
+      021F 48         000027 |	pha
+                      000028 |	
+      0220 A9 D7      000029 |	lda #0D7h
+                      000030 |	
+      0222            000031 |OutLoop:
+      0222 A2 FF      000032 |	ldx #0FFh
+                      000033 |
+      0224            000034 |InLoop1:
+      0224 A0 FF      000035 |	ldy #0FFh
                       000036 |
-      0223 CA         000037 |	dex
-      0224 D0 F8      000038 |	bne InLoop1
-                      000039 |
-      0226 38         000040 |	sec
-      0227 E9 01      000041 |	sbc #1d
-      0229 D0 F1      000042 |	bne OutLoop
-                      000043 |	
-                      000044 |;Restore registers from the stack.
-      022B 68         000045 |	pla
-      022C A8         000046 |	tay
-      022D 68         000047 |	pla
-      022E AA         000048 |	tax
-      022F 68         000049 |	pla
-                      000050 |
-      0230 60         000051 |	rts
-                      000052 |    
-                      000053 |    end
+      0226            000037 |InLoop2:
+      0226 88         000038 |	dey
+      0227 F0 FD      000039 |	beq InLoop2
+                      000040 |
+      0229 CA         000041 |	dex
+      022A D0 F8      000042 |	bne InLoop1
+                      000043 |
+      022C 38         000044 |	sec
+      022D E9 01      000045 |	sbc #1d
+      022F D0 F1      000046 |	bne OutLoop
+                      000047 |	
+                      000048 |;Restore registers from the stack.
+      0231 68         000049 |	pla
+      0232 A8         000050 |	tay
+      0233 68         000051 |	pla
+      0234 AA         000052 |	tax
+      0235 68         000053 |	pla
+                      000054 |
+      0236 60         000055 |	rts
+                      000056 |    
+                      000057 |    end
       
       *** Symbol Table ***
-      {INLOOP1=542, OUTLOOP=540, DELAY=533, MAIN=514, INLOOP2=544, =0}
+      {INLOOP1=548, OUTLOOP=546, DELAY=539, MAIN=514, INLOOP2=550, =0}
 .   %/output
 %/group
