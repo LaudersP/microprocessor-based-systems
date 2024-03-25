@@ -1,0 +1,2364 @@
+%group,title="Problem 1",description="Button Read"
+========================================================================================================
+Problem 1
+
+Write a program that will read the status of the 
+switches and reflect this status on your LEDs.
+%uasm65,title=""
+    org 0200h
+    
+main:
+    LDA 0a600h
+    STA 0a200h
+    
+    JMP main
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S10C0200AD00A68D00A24C000221
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+      0200            000003 |main:
+      0200 AD 00 A6   000004 |    LDA 0a600h
+      0203 8D 00 A2   000005 |    STA 0a200h
+                      000006 |    
+      0206 4C 00 02   000007 |    JMP main
+                      000008 |    
+                      000009 |    end
+      
+      *** Symbol Table ***
+      {MAIN=512, =0}
+.   %/output
+
+
+%/group
+
+%group,title="Problem 2",description="Button to Hex Display"
+========================================================================================================
+Problem 2
+
+Write a program that will read the status of the 
+switches and output this status as a HEX number 
+on the terminal.
+%uasm65,title=""
+OutChar:  equ E003h ;Output byte in reg A to the user.
+OutHex:   equ E012h ;Output a HEX number to the user.
+
+    org 0200h
+    
+main:
+    LDA 0a600h
+    JSR OutHex
+    LDA #0ah    ; New line
+    JSR OutChar
+    LDA #0dh    ; Carriage Return
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    JMP main
+    
+;Delay subroutine
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200AD00A62012E0A90A2003E0A90D201C02201C022079
+      	S11702141C02201C024C0002488A489848A9FFA2FFA0FF88BE
+      	S1130228F0FDCAD0F838E901D0F168A868AA686076
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0000            000001 |OutChar:  equ E003h ;Output byte in reg A to the user.
+      0000            000002 |OutHex:   equ E012h ;Output a HEX number to the user.
+                      000003 |
+      0200            000004 |    org 0200h
+                      000005 |    
+      0200            000006 |main:
+      0200 AD 00 A6   000007 |    LDA 0a600h
+      0203 20 12 E0   000008 |    JSR OutHex
+      0206 A9 0A      000009 |    LDA #0ah    ; New line
+      0208 20 03 E0   000010 |    JSR OutChar
+      020B A9 0D      000011 |    LDA #0dh    ; Carriage Return
+      020D 20 1C 02   000012 |    JSR Delay
+      0210 20 1C 02   000013 |    JSR Delay
+      0213 20 1C 02   000014 |    JSR Delay
+      0216 20 1C 02   000015 |    JSR Delay
+                      000016 |    
+      0219 4C 00 02   000017 |    JMP main
+                      000018 |    
+                      000019 |;Delay subroutine
+      021C            000020 |Delay:
+      021C 48         000021 |	pha
+      021D 8A         000022 |	txa
+      021E 48         000023 |	pha
+      021F 98         000024 |	tya
+      0220 48         000025 |	pha
+                      000026 |	
+      0221 A9 FF      000027 |	lda #0FFh
+                      000028 |	
+      0223            000029 |OutLoop:
+      0223 A2 FF      000030 |	ldx #0FFh
+                      000031 |
+      0225            000032 |InLoop1:
+      0225 A0 FF      000033 |	ldy #0FFh
+                      000034 |
+      0227            000035 |InLoop2:
+      0227 88         000036 |	dey
+      0228 F0 FD      000037 |	beq InLoop2
+                      000038 |
+      022A CA         000039 |	dex
+      022B D0 F8      000040 |	bne InLoop1
+                      000041 |
+      022D 38         000042 |	sec
+      022E E9 01      000043 |	sbc #1d
+      0230 D0 F1      000044 |	bne OutLoop
+                      000045 |	
+                      000046 |;Restore registers from the stack.
+      0232 68         000047 |	pla
+      0233 A8         000048 |	tay
+      0234 68         000049 |	pla
+      0235 AA         000050 |	tax
+      0236 68         000051 |	pla
+                      000052 |
+      0237 60         000053 |	rts
+                      000054 |    
+                      000055 |    end
+      
+      *** Symbol Table ***
+      {INLOOP1=549, OUTLOOP=547, DELAY=540, OUTCHAR=57347, MAIN=512, OUTHEX=57362, INLOOP2=551, =0}
+.   %/output
+
+
+%/group
+
+%group,title="Problem 3",description="Alphabet Output"
+========================================================================================================
+Problem 3
+
+Write a program that will continuously output 
+the alphabet character-by-character (not as a 
+whole string) in reverse order at a rate 
+ranging from very slow to very fast depending 
+upon the switch settings. Note, the speed that 
+the individual characters are displayed at is 
+what is being controlled. The program's speed 
+can be controlled by a waste time loop.
+%uasm65,title=""
+OutChar:  equ E003h ;Output byte in reg A to the user.
+
+    org 0200h
+    
+    LDX #122d
+    
+main:
+    ; Do nothing if no switch is pressed
+    LDA 0a600h
+    CMP #0d
+    BEQ main
+    
+    LDA #0Ah    ; New line
+    JSR OutChar
+    LDA #0Dh    ; Carriage Return
+    JSR OutChar
+    TXA
+    JSR OutChar
+    
+    DEX
+    
+    ;See what switch is being pressed
+    LDA 0a600h
+    
+    CMP #1d
+    BEQ Switch1
+    
+    CMP #2d
+    BEQ Switch2
+    
+    CMP #4d
+    BEQ Switch3
+    
+    CMP #8d
+    BEQ Switch4
+   
+Check:
+    CPX #96d
+    BNE main
+    
+    LDX #122d
+    JMP main
+    
+Switch1:
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    JMP Check
+   
+Switch2:
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    JMP Check
+    
+Switch3:
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    JMP Check
+    
+Switch4:
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    
+    JMP Check
+    
+;Delay subroutine
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A27AAD00A6C900F0F9A90A2003E0A90D2003E08ACC
+      	S11702142003E0CAAD00A6C901F015C902F044C904F067C9F7
+      	S117022808F07EE060D0D3A27A4C020220B80220B80220B86D
+      	S117023C0220B80220B80220B80220B80220B80220B802206C
+      	S1170250B80220B80220B80220B80220B80220B80220B802C0
+      	S11702644C2B0220B80220B80220B80220B80220B80220B8EF
+      	S11702780220B80220B80220B80220B80220B80220B8024C04
+      	S117028C2B0220B80220B80220B80220B80220B80220B80211
+      	S11702A020B80220B8024C2B0220B80220B80220B80220B8B3
+      	S11702B4024C2B02488A489848A9FFA2FFA0FF88F0FDCAD0C6
+      	S10F02C8F838E901D0F168A868AA686061
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0000            000001 |OutChar:  equ E003h ;Output byte in reg A to the user.
+                      000002 |
+      0200            000003 |    org 0200h
+                      000004 |    
+      0200 A2 7A      000005 |    LDX #122d
+                      000006 |    
+      0202            000007 |main:
+                      000008 |    ; Do nothing if no switch is pressed
+      0202 AD 00 A6   000009 |    LDA 0a600h
+      0205 C9 00      000010 |    CMP #0d
+      0207 F0 F9      000011 |    BEQ main
+                      000012 |    
+      0209 A9 0A      000013 |    LDA #0Ah    ; New line
+      020B 20 03 E0   000014 |    JSR OutChar
+      020E A9 0D      000015 |    LDA #0Dh    ; Carriage Return
+      0210 20 03 E0   000016 |    JSR OutChar
+      0213 8A         000017 |    TXA
+      0214 20 03 E0   000018 |    JSR OutChar
+                      000019 |    
+      0217 CA         000020 |    DEX
+                      000021 |    
+                      000022 |    ;See what switch is being pressed
+      0218 AD 00 A6   000023 |    LDA 0a600h
+                      000024 |    
+      021B C9 01      000025 |    CMP #1d
+      021D F0 15      000026 |    BEQ Switch1
+                      000027 |    
+      021F C9 02      000028 |    CMP #2d
+      0221 F0 44      000029 |    BEQ Switch2
+                      000030 |    
+      0223 C9 04      000031 |    CMP #4d
+      0225 F0 67      000032 |    BEQ Switch3
+                      000033 |    
+      0227 C9 08      000034 |    CMP #8d
+      0229 F0 7E      000035 |    BEQ Switch4
+                      000036 |   
+      022B            000037 |Check:
+      022B E0 60      000038 |    CPX #96d
+      022D D0 D3      000039 |    BNE main
+                      000040 |    
+      022F A2 7A      000041 |    LDX #122d
+      0231 4C 02 02   000042 |    JMP main
+                      000043 |    
+      0234            000044 |Switch1:
+      0234 20 B8 02   000045 |    JSR Delay
+      0237 20 B8 02   000046 |    JSR Delay
+      023A 20 B8 02   000047 |    JSR Delay
+      023D 20 B8 02   000048 |    JSR Delay
+      0240 20 B8 02   000049 |    JSR Delay
+      0243 20 B8 02   000050 |    JSR Delay
+      0246 20 B8 02   000051 |    JSR Delay
+      0249 20 B8 02   000052 |    JSR Delay
+      024C 20 B8 02   000053 |    JSR Delay
+      024F 20 B8 02   000054 |    JSR Delay
+      0252 20 B8 02   000055 |    JSR Delay
+      0255 20 B8 02   000056 |    JSR Delay
+      0258 20 B8 02   000057 |    JSR Delay
+      025B 20 B8 02   000058 |    JSR Delay
+      025E 20 B8 02   000059 |    JSR Delay
+      0261 20 B8 02   000060 |    JSR Delay
+                      000061 |    
+      0264 4C 2B 02   000062 |    JMP Check
+                      000063 |   
+      0267            000064 |Switch2:
+      0267 20 B8 02   000065 |    JSR Delay
+      026A 20 B8 02   000066 |    JSR Delay
+      026D 20 B8 02   000067 |    JSR Delay
+      0270 20 B8 02   000068 |    JSR Delay
+      0273 20 B8 02   000069 |    JSR Delay
+      0276 20 B8 02   000070 |    JSR Delay
+      0279 20 B8 02   000071 |    JSR Delay
+      027C 20 B8 02   000072 |    JSR Delay
+      027F 20 B8 02   000073 |    JSR Delay
+      0282 20 B8 02   000074 |    JSR Delay
+      0285 20 B8 02   000075 |    JSR Delay
+      0288 20 B8 02   000076 |    JSR Delay
+                      000077 |    
+      028B 4C 2B 02   000078 |    JMP Check
+                      000079 |    
+      028E            000080 |Switch3:
+      028E 20 B8 02   000081 |    JSR Delay
+      0291 20 B8 02   000082 |    JSR Delay
+      0294 20 B8 02   000083 |    JSR Delay
+      0297 20 B8 02   000084 |    JSR Delay
+      029A 20 B8 02   000085 |    JSR Delay
+      029D 20 B8 02   000086 |    JSR Delay
+      02A0 20 B8 02   000087 |    JSR Delay
+      02A3 20 B8 02   000088 |    JSR Delay
+                      000089 |    
+      02A6 4C 2B 02   000090 |    JMP Check
+                      000091 |    
+      02A9            000092 |Switch4:
+      02A9 20 B8 02   000093 |    JSR Delay
+      02AC 20 B8 02   000094 |    JSR Delay
+      02AF 20 B8 02   000095 |    JSR Delay
+      02B2 20 B8 02   000096 |    JSR Delay
+                      000097 |    
+      02B5 4C 2B 02   000098 |    JMP Check
+                      000099 |    
+                      000100 |;Delay subroutine
+      02B8            000101 |Delay:
+      02B8 48         000102 |	pha
+      02B9 8A         000103 |	txa
+      02BA 48         000104 |	pha
+      02BB 98         000105 |	tya
+      02BC 48         000106 |	pha
+                      000107 |	
+      02BD A9 FF      000108 |	lda #0FFh
+                      000109 |	
+      02BF            000110 |OutLoop:
+      02BF A2 FF      000111 |	ldx #0FFh
+                      000112 |
+      02C1            000113 |InLoop1:
+      02C1 A0 FF      000114 |	ldy #0FFh
+                      000115 |
+      02C3            000116 |InLoop2:
+      02C3 88         000117 |	dey
+      02C4 F0 FD      000118 |	beq InLoop2
+                      000119 |
+      02C6 CA         000120 |	dex
+      02C7 D0 F8      000121 |	bne InLoop1
+                      000122 |
+      02C9 38         000123 |	sec
+      02CA E9 01      000124 |	sbc #1d
+      02CC D0 F1      000125 |	bne OutLoop
+                      000126 |	
+                      000127 |;Restore registers from the stack.
+      02CE 68         000128 |	pla
+      02CF A8         000129 |	tay
+      02D0 68         000130 |	pla
+      02D1 AA         000131 |	tax
+      02D2 68         000132 |	pla
+                      000133 |
+      02D3 60         000134 |	rts
+                      000135 |    
+                      000136 |    end
+      
+      *** Symbol Table ***
+      {DELAY=696, MAIN=514, INLOOP2=707, OUTCHAR=57347, INLOOP1=705, SWITCH4=681, SWITCH3=654, SWITCH2=615, SWITCH1=564, CHECK=555, OUTLOOP=703, =0}
+.   %/output
+
+
+%/group
+
+%group,title="Problem 4",description="Alarm System"
+========================================================================================================
+Problem 4
+
+Write a program that will do the following 
+(use the AND instruction to determine which 
+switches are pressed):
+
+a. Print "The front door is open." if switch 0 is pressed.
+b. Print "Your mailbox is open." if switch 1 is pressed.
+c. Print "The smoke alarm is on." if switch 2 is pressed.
+
+If more than one switch is pressed, then 
+multiple messages will alternately be displayed.
+%uasm65,title=""
+OutChar:  equ E003h ;Output byte in reg A to the user.
+
+PrntMess: equ E00Ch ;Print a message to the user.
+
+    org 0200h
+    
+main:
+    LDA 0a600h
+    
+    CMP #1d
+    BEQ OutputSwitch1
+    
+    CMP #2d
+    BEQ OutputSwitch2
+    
+    CMP #4d
+    BEQ OutputSwitch3
+
+    JMP main
+    
+    end
+    
+OutputSwitch1:
+    LDX #Switch1Mess<
+    LDY #Switch1Mess>
+    JSR PrntMess
+    
+    LDA #0Ah
+    JSR OutChar
+    LDA #0Dh
+    JSR OutChar
+    
+    JMP main
+
+OutputSwitch2:
+    LDX #Switch2Mess<
+    LDY #Switch2Mess>
+    JSR PrntMess
+    
+    LDA #0Ah
+    JSR OutChar
+    LDA #0Dh
+    JSR OutChar
+    
+    JMP main
+
+OutputSwitch3:
+    LDX #Switch3Mess<
+    LDY #Switch3Mess>
+    JSR PrntMess
+    
+    LDA #0Ah
+    JSR OutChar
+    LDA #0Dh
+    JSR OutChar
+    
+    JMP main
+    
+Switch1Mess:
+    dbt "The front door is open."
+    dbt 0d
+
+Switch2Mess:
+    dbt "Your mailbox is open."
+    dbt 0d
+
+Switch3Mess:
+    dbt "The smoke alarm is open."
+    dbt 0d
+
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200AD00A6C901F00BC902F01BC904F02B4C0002A24ED2
+      	S1170214A002200CE0A90A2003E0A90D2003E04C0002A2665F
+      	S1170228A002200CE0A90A2003E0A90D2003E04C0002A27C35
+      	S117023CA002200CE0A90A2003E0A90D2003E04C0002546883
+      	S1170250652066726F6E7420646F6F72206973206F70656E46
+      	S11702642E00596F7572206D61696C626F78206973206F709E
+      	S1170278656E2E0054686520736D6F6B6520616C61726D20C0
+      	S10C028C6973206F70656E2E0089
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0000            000001 |OutChar:  equ E003h ;Output byte in reg A to the user.
+                      000002 |
+      0000            000003 |PrntMess: equ E00Ch ;Print a message to the user.
+                      000004 |
+      0200            000005 |    org 0200h
+                      000006 |    
+      0200            000007 |main:
+      0200 AD 00 A6   000008 |    LDA 0a600h
+                      000009 |    
+      0203 C9 01      000010 |    CMP #1d
+      0205 F0 0B      000011 |    BEQ OutputSwitch1
+                      000012 |    
+      0207 C9 02      000013 |    CMP #2d
+      0209 F0 1B      000014 |    BEQ OutputSwitch2
+                      000015 |    
+      020B C9 04      000016 |    CMP #4d
+      020D F0 2B      000017 |    BEQ OutputSwitch3
+                      000018 |
+      020F 4C 00 02   000019 |    JMP main
+                      000020 |    
+                      000021 |    end
+                      000022 |    
+      0212            000023 |OutputSwitch1:
+      0212 A2 4E      000024 |    LDX #Switch1Mess<
+      0214 A0 02      000025 |    LDY #Switch1Mess>
+      0216 20 0C E0   000026 |    JSR PrntMess
+                      000027 |    
+      0219 A9 0A      000028 |    LDA #0Ah
+      021B 20 03 E0   000029 |    JSR OutChar
+      021E A9 0D      000030 |    LDA #0Dh
+      0220 20 03 E0   000031 |    JSR OutChar
+                      000032 |    
+      0223 4C 00 02   000033 |    JMP main
+                      000034 |
+      0226            000035 |OutputSwitch2:
+      0226 A2 66      000036 |    LDX #Switch2Mess<
+      0228 A0 02      000037 |    LDY #Switch2Mess>
+      022A 20 0C E0   000038 |    JSR PrntMess
+                      000039 |    
+      022D A9 0A      000040 |    LDA #0Ah
+      022F 20 03 E0   000041 |    JSR OutChar
+      0232 A9 0D      000042 |    LDA #0Dh
+      0234 20 03 E0   000043 |    JSR OutChar
+                      000044 |    
+      0237 4C 00 02   000045 |    JMP main
+                      000046 |
+      023A            000047 |OutputSwitch3:
+      023A A2 7C      000048 |    LDX #Switch3Mess<
+      023C A0 02      000049 |    LDY #Switch3Mess>
+      023E 20 0C E0   000050 |    JSR PrntMess
+                      000051 |    
+      0241 A9 0A      000052 |    LDA #0Ah
+      0243 20 03 E0   000053 |    JSR OutChar
+      0246 A9 0D      000054 |    LDA #0Dh
+      0248 20 03 E0   000055 |    JSR OutChar
+                      000056 |    
+      024B 4C 00 02   000057 |    JMP main
+                      000058 |    
+      024E            000059 |Switch1Mess:
+      024E 54         000060 |    dbt "The front door is open."
+      024F 68 65 20         
+      0252 66 72 6F         
+      0255 6E 74 20         
+      0258 64 6F 6F         
+      025B 72 20 69         
+      025E 73 20 6F         
+      0261 70 65 6E         
+      0264 2E               
+      0265 00         000061 |    dbt 0d
+                      000062 |
+      0266            000063 |Switch2Mess:
+      0266 59         000064 |    dbt "Your mailbox is open."
+      0267 6F 75 72         
+      026A 20 6D 61         
+      026D 69 6C 62         
+      0270 6F 78 20         
+      0273 69 73 20         
+      0276 6F 70 65         
+      0279 6E 2E            
+      027B 00         000065 |    dbt 0d
+                      000066 |
+      027C            000067 |Switch3Mess:
+      027C 54         000068 |    dbt "The smoke alarm is open."
+      027D 68 65 20         
+      0280 73 6D 6F         
+      0283 6B 65 20         
+      0286 61 6C 61         
+      0289 72 6D 20         
+      028C 69 73 20         
+      028F 6F 70 65         
+      0292 6E 2E            
+      0294 00         000069 |    dbt 0d
+      
+      *** Symbol Table ***
+      {PRNTMESS=57356, MAIN=512, OUTPUTSWITCH3=570, OUTPUTSWITCH2=550, OUTPUTSWITCH1=530, OUTCHAR=57347, SWITCH3MESS=636, SWITCH2MESS=614, SWITCH1MESS=590, =0}
+.   %/output
+
+
+%/group
+
+%group,title="Problem 5",description="8 bit output pattern"
+========================================================================================================
+Problem 5
+
+Write a program that will dump the contents of 
+memory locations 0E000h - 0E010h to the output 
+port as an 8 bit light pattern at a rate of 1 
+location/second. Hint: you should use an index 
+register to accomplish this.
+%uasm65,title=""
+    org 0200h
+    
+    LDA #0d
+    LDX #0d
+    
+main:
+    LDA 0e000h,x
+    STA 0a200h
+    
+    JSR Delay
+    JSR Delay
+    JSR Delay
+    JSR Delay
+  
+    INX
+    CPX #11d
+    BNE main
+    
+    BRK
+    
+;Delay subroutine
+Delay:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #0FFh
+	
+OutLoop:
+	ldx #0FFh
+
+InLoop1:
+	ldy #0FFh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+	
+	end
+	
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A900A200BD00E08D00A2201C02201C02201C0220F5
+      	S11702141C02E8E00BD0E900488A489848A9FFA2FFA0FF88BE
+      	S1130228F0FDCAD0F838E901D0F168A868AA686076
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+      0200 A9 00      000003 |    LDA #0d
+      0202 A2 00      000004 |    LDX #0d
+                      000005 |    
+      0204            000006 |main:
+      0204 BD 00 E0   000007 |    LDA 0e000h,x
+      0207 8D 00 A2   000008 |    STA 0a200h
+                      000009 |    
+      020A 20 1C 02   000010 |    JSR Delay
+      020D 20 1C 02   000011 |    JSR Delay
+      0210 20 1C 02   000012 |    JSR Delay
+      0213 20 1C 02   000013 |    JSR Delay
+                      000014 |  
+      0216 E8         000015 |    INX
+      0217 E0 0B      000016 |    CPX #11d
+      0219 D0 E9      000017 |    BNE main
+                      000018 |    
+      021B 00         000019 |    BRK
+                      000020 |    
+                      000021 |;Delay subroutine
+      021C            000022 |Delay:
+      021C 48         000023 |	pha
+      021D 8A         000024 |	txa
+      021E 48         000025 |	pha
+      021F 98         000026 |	tya
+      0220 48         000027 |	pha
+                      000028 |	
+      0221 A9 FF      000029 |	lda #0FFh
+                      000030 |	
+      0223            000031 |OutLoop:
+      0223 A2 FF      000032 |	ldx #0FFh
+                      000033 |
+      0225            000034 |InLoop1:
+      0225 A0 FF      000035 |	ldy #0FFh
+                      000036 |
+      0227            000037 |InLoop2:
+      0227 88         000038 |	dey
+      0228 F0 FD      000039 |	beq InLoop2
+                      000040 |
+      022A CA         000041 |	dex
+      022B D0 F8      000042 |	bne InLoop1
+                      000043 |
+      022D 38         000044 |	sec
+      022E E9 01      000045 |	sbc #1d
+      0230 D0 F1      000046 |	bne OutLoop
+                      000047 |	
+                      000048 |;Restore registers from the stack.
+      0232 68         000049 |	pla
+      0233 A8         000050 |	tay
+      0234 68         000051 |	pla
+      0235 AA         000052 |	tax
+      0236 68         000053 |	pla
+                      000054 |
+      0237 60         000055 |	rts
+                      000056 |	
+                      000057 |	end
+      
+      *** Symbol Table ***
+      {INLOOP1=549, OUTLOOP=547, DELAY=540, MAIN=516, INLOOP2=551, =0}
+.   %/output
+
+
+%/group
+
+%group,title="Problem 6",description="Dual square waves"
+========================================================================================================
+Problem 6
+
+Write a program that will output a 20Hz square 
+wave to bit 5 of PortA and a 30Hz square wave 
+to bit 6 of PortA without affecting the state 
+of the other bits in the port (this will be 
+checked by an oscilloscope).
+%uasm65,title=""
+    org 0200h
+    
+main:
+    ; Both on
+    LDA #00110000b
+    STA 0a200h
+    
+    JSR DelayBig
+    
+    ; 20Hz off
+    LDA #00010000b
+    STA 0a200h
+    
+    JSR DelaySmall
+    
+    ; 30Hz off
+    LDA #00000000b
+    STA 0a200h
+    
+    JSR DelaySmall
+    
+    ; 20Hz on
+    LDA #00100000b
+    STA 0a200h
+    
+    JSR DelayBig
+    
+    ; Flip, 20Hz off 30Hz on
+    LDA #00010000b
+    STA 0a200h
+    
+    JSR DelayBig
+    
+    ; 20Hz on
+    LDA #00110000b
+    STA 0a200h
+    
+    JSR DelaySmall
+    
+    ; 30Hz off
+    LDA #00100000b
+    STA 0a200h
+    
+    JSR DelaySmall
+    
+    ; 20Hzoff
+    LDA #00000000b
+    STA 0a200h
+    
+    JSR DelayBig
+    
+    JMP main
+    
+    
+;16.67ms delay subroutine
+DelayBig:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #048h
+	
+OutLoopBig:
+	ldx #0FFh
+
+InLoop1Big:
+	ldy #0FFh
+
+InLoop2Big:
+	dey
+	beq InLoop2Big
+
+	dex
+	bne InLoop1Big
+
+	sec
+	sbc #1d
+	bne OutLoopBig
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+	
+;Small delay subroutine
+DelaySmall:
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	lda #024h
+	
+OutLoopSmall:
+	ldx #0FFh
+
+InLoop1Small:
+	ldy #0FFh
+
+InLoop2Small:
+	dey
+	beq InLoop2Small
+
+	dex
+	bne InLoop1Small
+
+	sec
+	sbc #1d
+	bne OutLoopSmall
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9308D00A2204302A9108D00A2205F02A9008D00DA
+      	S1170214A2205F02A9208D00A2204302A9108D00A220430205
+      	S1170228A9308D00A2205F02A9208D00A2205F02A9008D0086
+      	S117023CA22043024C0002488A489848A948A2FFA0FF88F0B2
+      	S1170250FDCAD0F838E901D0F168A868AA6860488A48984840
+      	S1170264A924A2FFA0FF88F0FDCAD0F838E901D0F168A86813
+      	S1060278AA68600D
+      	S9030000FC
+      %/s19
+      
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+      0200            000003 |main:
+                      000004 |    ; Both on
+      0200 A9 30      000005 |    LDA #00110000b
+      0202 8D 00 A2   000006 |    STA 0a200h
+                      000007 |    
+      0205 20 43 02   000008 |    JSR DelayBig
+                      000009 |    
+                      000010 |    ; 20Hz off
+      0208 A9 10      000011 |    LDA #00010000b
+      020A 8D 00 A2   000012 |    STA 0a200h
+                      000013 |    
+      020D 20 5F 02   000014 |    JSR DelaySmall
+                      000015 |    
+                      000016 |    ; 30Hz off
+      0210 A9 00      000017 |    LDA #00000000b
+      0212 8D 00 A2   000018 |    STA 0a200h
+                      000019 |    
+      0215 20 5F 02   000020 |    JSR DelaySmall
+                      000021 |    
+                      000022 |    ; 20Hz on
+      0218 A9 20      000023 |    LDA #00100000b
+      021A 8D 00 A2   000024 |    STA 0a200h
+                      000025 |    
+      021D 20 43 02   000026 |    JSR DelayBig
+                      000027 |    
+                      000028 |    ; Flip,20Hz off 30Hz on
+      0220 A9 10      000029 |    LDA #00010000b
+      0222 8D 00 A2   000030 |    STA 0a200h
+                      000031 |    
+      0225 20 43 02   000032 |    JSR DelayBig
+                      000033 |    
+                      000034 |    ; 20Hz on
+      0228 A9 30      000035 |    LDA #00110000b
+      022A 8D 00 A2   000036 |    STA 0a200h
+                      000037 |    
+      022D 20 5F 02   000038 |    JSR DelaySmall
+                      000039 |    
+                      000040 |    ; 30Hz off
+      0230 A9 20      000041 |    LDA #00100000b
+      0232 8D 00 A2   000042 |    STA 0a200h
+                      000043 |    
+      0235 20 5F 02   000044 |    JSR DelaySmall
+                      000045 |    
+                      000046 |    ; 20Hzoff
+      0238 A9 00      000047 |    LDA #00000000b
+      023A 8D 00 A2   000048 |    STA 0a200h
+                      000049 |    
+      023D 20 43 02   000050 |    JSR DelayBig
+                      000051 |    
+      0240 4C 00 02   000052 |    JMP main
+                      000053 |    
+                      000054 |    
+                      000055 |;16.67ms delay subroutine
+      0243            000056 |DelayBig:
+      0243 48         000057 |	pha
+      0244 8A         000058 |	txa
+      0245 48         000059 |	pha
+      0246 98         000060 |	tya
+      0247 48         000061 |	pha
+                      000062 |	
+      0248 A9 48      000063 |	lda #048h
+                      000064 |	
+      024A            000065 |OutLoopBig:
+      024A A2 FF      000066 |	ldx #0FFh
+                      000067 |
+      024C            000068 |InLoop1Big:
+      024C A0 FF      000069 |	ldy #0FFh
+                      000070 |
+      024E            000071 |InLoop2Big:
+      024E 88         000072 |	dey
+      024F F0 FD      000073 |	beq InLoop2Big
+                      000074 |
+      0251 CA         000075 |	dex
+      0252 D0 F8      000076 |	bne InLoop1Big
+                      000077 |
+      0254 38         000078 |	sec
+      0255 E9 01      000079 |	sbc #1d
+      0257 D0 F1      000080 |	bne OutLoopBig
+                      000081 |	
+                      000082 |;Restore registers from the stack.
+      0259 68         000083 |	pla
+      025A A8         000084 |	tay
+      025B 68         000085 |	pla
+      025C AA         000086 |	tax
+      025D 68         000087 |	pla
+                      000088 |
+      025E 60         000089 |	rts
+                      000090 |	
+                      000091 |;Small delay subroutine
+      025F            000092 |DelaySmall:
+      025F 48         000093 |	pha
+      0260 8A         000094 |	txa
+      0261 48         000095 |	pha
+      0262 98         000096 |	tya
+      0263 48         000097 |	pha
+                      000098 |	
+      0264 A9 24      000099 |	lda #024h
+                      000100 |	
+      0266            000101 |OutLoopSmall:
+      0266 A2 FF      000102 |	ldx #0FFh
+                      000103 |
+      0268            000104 |InLoop1Small:
+      0268 A0 FF      000105 |	ldy #0FFh
+                      000106 |
+      026A            000107 |InLoop2Small:
+      026A 88         000108 |	dey
+      026B F0 FD      000109 |	beq InLoop2Small
+                      000110 |
+      026D CA         000111 |	dex
+      026E D0 F8      000112 |	bne InLoop1Small
+                      000113 |
+      0270 38         000114 |	sec
+      0271 E9 01      000115 |	sbc #1d
+      0273 D0 F1      000116 |	bne OutLoopSmall
+                      000117 |	
+                      000118 |;Restore registers from the stack.
+      0275 68         000119 |	pla
+      0276 A8         000120 |	tay
+      0277 68         000121 |	pla
+      0278 AA         000122 |	tax
+      0279 68         000123 |	pla
+                      000124 |
+      027A 60         000125 |	rts
+                      000126 |    
+                      000127 |    end
+      
+      *** Symbol Table ***
+      {INLOOP2BIG=590, INLOOP2SMALL=618, OUTLOOPSMALL=614, MAIN=512, INLOOP1BIG=588, DELAYBIG=579, OUTLOOPBIG=586, DELAYSMALL=607, INLOOP1SMALL=616, =0}
+.   %/output
+
+
+%/group
+
+%group,title="Problem 7",description="Ping Pong"
+========================================================================================================
+Problem 7
+
+Write a Ping Pong simulation that will send one 
+light back and forth from the left side of your 
+LEDs to the right side and back again. Each time 
+the light crosses the LEDs, increase its speed a 
+little bit. If the left player's switch is pressed 
+while the leftmost LED is on then send it back across 
+the display, else give 1 point to the right player. 
+If the right player's switch is pressed while the 
+rightmost LED is on then send it back across the 
+display, else give 1 point to the left player. If 
+either player's switch is pressed while the ball 
+is traveling in their direction but before it 
+reaches the last LED, it is counted as a swing and 
+a miss and the other player receives a point. The 
+first player with 5 points wins. Keep track of the 
+score and notify the users when either the left 
+or the right player has won.
+
+%uasm65,title=""
+    org 0200h
+    
+    ; Load A-Reg with LED pattern
+    LDA #00000001b
+    STA 0a200h  
+    
+    LDX #0d
+
+main:
+    ; Shift ball left
+    JSR ShiftLeft
+    
+    ; Get switch status
+    LDA 0a600h
+    
+    ; Act on switch
+    CMP #2d
+    BNE PointRight
+ 
+main2:
+    ; Shift ball right
+    JSR ShiftRight
+    
+    ; Get switch status
+    LDA 0a600h
+    
+    ; Act on switch
+    CMP #1d
+    BNE PointLeft
+    
+    jmp main
+    
+GameOver:
+    end
+    
+;===============
+;= SUBROUTINES =
+;===============
+
+; === Add point to left player ===
+PointLeft:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	INC PlayerLeftScore
+	
+	LDA PlayerLeftScore
+	CMP #5d
+	BEQ GameOver
+	
+	LDA #10000000b
+	STA 0a200h
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	jmp main2
+	
+; === Add point to right player ===
+PointRight:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+	INC PlayerRightScore
+	
+	LDA PlayerRightScore
+	CMP #5d
+	BEQ GameOver
+	
+	LDA #00000001b
+	STA 0a200h
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	jmp main
+	
+; === Shift Left ===
+ShiftLeft:
+    ;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+; Main code
+    LDX #0d
+    
+ShiftLeftLoop:
+    JSR ShiftDelay
+    
+    ASL 0a200h
+    INX
+    
+    CPX #7d
+    BNE ShiftLeftLoop
+    
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+	
+; === Shift Right ===
+ShiftRight:
+    ;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+; Main code
+    LDX #0d
+    
+ShiftRightLoop:
+    JSR ShiftDelay
+    
+    LSR 0a200h
+    INX
+    
+    CPX #7d
+    BNE ShiftRightLoop
+    
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+
+; Delay Subroutine
+ShiftDelay:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+;Change the number that is being loaded into the
+; 'A' register in order to change the delay time.
+	lda #02Fh
+	
+OutLoop:
+	ldx #030h
+
+InLoop1:
+	ldy #0ffh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts 
+	
+; =============
+; = Variables =
+; =============
+PlayerLeftScore:
+    dbt 0d
+    
+PlayerRightScore:
+    dbt 0d
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9018D00A2A200205602AD00A6C902D029206E024C
+      	S1170214AD00A6C901D0034C0702488A489848EEA202ADA2B2
+      	S117022802C905F0F1A9808D00A268A868AA684C1102488AFA
+      	S117023C489848EEA302ADA302C905F0D5A9018D00A268A821
+      	S117025068AA684C0702488A489848A2002086020E00A2E8EB
+      	S1170264E007D0F568A868AA6860488A489848A200208602A8
+      	S11702784E00A2E8E007D0F568A868AA6860488A489848A95D
+      	S117028C2FA230A0FF88F0FDCAD0F838E901D0F168A868AAAE
+      	S10702A0686000008E
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+                      000003 |    ; Load A-Reg with LED pattern
+      0200 A9 01      000004 |    LDA #00000001b
+      0202 8D 00 A2   000005 |    STA 0a200h  
+                      000006 |    
+      0205 A2 00      000007 |    LDX #0d
+                      000008 |
+      0207            000009 |main:
+                      000010 |    ; Shift ball left
+      0207 20 56 02   000011 |    JSR ShiftLeft
+                      000012 |    
+                      000013 |    ; Get switch status
+      020A AD 00 A6   000014 |    LDA 0a600h
+                      000015 |    
+                      000016 |    ; Act on switch
+      020D C9 02      000017 |    CMP #2d
+      020F D0 29      000018 |    BNE PointRight
+                      000019 | 
+      0211            000020 |main2:
+                      000021 |    ; Shift ball right
+      0211 20 6E 02   000022 |    JSR ShiftRight
+                      000023 |    
+                      000024 |    ; Get switch status
+      0214 AD 00 A6   000025 |    LDA 0a600h
+                      000026 |    
+                      000027 |    ; Act on switch
+      0217 C9 01      000028 |    CMP #1d
+      0219 D0 03      000029 |    BNE PointLeft
+                      000030 |    
+      021B 4C 07 02   000031 |    jmp main
+                      000032 |    
+      021E            000033 |GameOver:
+                      000034 |    end
+                      000035 |    
+                      000036 |;===============
+                      000037 |;= SUBROUTINES =
+                      000038 |;===============
+                      000039 |
+                      000040 |; === Add point to left player ===
+      021E            000041 |PointLeft:
+                      000042 |;Save registers on the stack.
+      021E 48         000043 |	pha
+      021F 8A         000044 |	txa
+      0220 48         000045 |	pha
+      0221 98         000046 |	tya
+      0222 48         000047 |	pha
+                      000048 |	
+      0223 EE A2 02   000049 |	INC PlayerLeftScore
+                      000050 |	
+      0226 AD A2 02   000051 |	LDA PlayerLeftScore
+      0229 C9 05      000052 |	CMP #5d
+      022B F0 F1      000053 |	BEQ GameOver
+                      000054 |	
+      022D A9 80      000055 |	LDA #10000000b
+      022F 8D 00 A2   000056 |	STA 0a200h
+                      000057 |	
+                      000058 |;Restore registers from the stack.
+      0232 68         000059 |	pla
+      0233 A8         000060 |	tay
+      0234 68         000061 |	pla
+      0235 AA         000062 |	tax
+      0236 68         000063 |	pla
+                      000064 |
+      0237 4C 11 02   000065 |	jmp main2
+                      000066 |	
+                      000067 |; === Add point to right player ===
+      023A            000068 |PointRight:
+                      000069 |;Save registers on the stack.
+      023A 48         000070 |	pha
+      023B 8A         000071 |	txa
+      023C 48         000072 |	pha
+      023D 98         000073 |	tya
+      023E 48         000074 |	pha
+                      000075 |	
+      023F EE A3 02   000076 |	INC PlayerRightScore
+                      000077 |	
+      0242 AD A3 02   000078 |	LDA PlayerRightScore
+      0245 C9 05      000079 |	CMP #5d
+      0247 F0 D5      000080 |	BEQ GameOver
+                      000081 |	
+      0249 A9 01      000082 |	LDA #00000001b
+      024B 8D 00 A2   000083 |	STA 0a200h
+                      000084 |	
+                      000085 |;Restore registers from the stack.
+      024E 68         000086 |	pla
+      024F A8         000087 |	tay
+      0250 68         000088 |	pla
+      0251 AA         000089 |	tax
+      0252 68         000090 |	pla
+                      000091 |
+      0253 4C 07 02   000092 |	jmp main
+                      000093 |	
+                      000094 |; === Shift Left ===
+      0256            000095 |ShiftLeft:
+                      000096 |    ;Save registers on the stack.
+      0256 48         000097 |	pha
+      0257 8A         000098 |	txa
+      0258 48         000099 |	pha
+      0259 98         000100 |	tya
+      025A 48         000101 |	pha
+                      000102 |	
+                      000103 |; Main code
+      025B A2 00      000104 |    LDX #0d
+                      000105 |    
+      025D            000106 |ShiftLeftLoop:
+      025D 20 86 02   000107 |    JSR ShiftDelay
+                      000108 |    
+      0260 0E 00 A2   000109 |    ASL 0a200h
+      0263 E8         000110 |    INX
+                      000111 |    
+      0264 E0 07      000112 |    CPX #7d
+      0266 D0 F5      000113 |    BNE ShiftLeftLoop
+                      000114 |    
+                      000115 |;Restore registers from the stack.
+      0268 68         000116 |	pla
+      0269 A8         000117 |	tay
+      026A 68         000118 |	pla
+      026B AA         000119 |	tax
+      026C 68         000120 |	pla
+                      000121 |
+      026D 60         000122 |	rts
+                      000123 |	
+                      000124 |; === Shift Right ===
+      026E            000125 |ShiftRight:
+                      000126 |    ;Save registers on the stack.
+      026E 48         000127 |	pha
+      026F 8A         000128 |	txa
+      0270 48         000129 |	pha
+      0271 98         000130 |	tya
+      0272 48         000131 |	pha
+                      000132 |	
+                      000133 |; Main code
+      0273 A2 00      000134 |    LDX #0d
+                      000135 |    
+      0275            000136 |ShiftRightLoop:
+      0275 20 86 02   000137 |    JSR ShiftDelay
+                      000138 |    
+      0278 4E 00 A2   000139 |    LSR 0a200h
+      027B E8         000140 |    INX
+                      000141 |    
+      027C E0 07      000142 |    CPX #7d
+      027E D0 F5      000143 |    BNE ShiftRightLoop
+                      000144 |    
+                      000145 |;Restore registers from the stack.
+      0280 68         000146 |	pla
+      0281 A8         000147 |	tay
+      0282 68         000148 |	pla
+      0283 AA         000149 |	tax
+      0284 68         000150 |	pla
+                      000151 |
+      0285 60         000152 |	rts
+                      000153 |
+                      000154 |; Delay Subroutine
+      0286            000155 |ShiftDelay:
+                      000156 |;Save registers on the stack.
+      0286 48         000157 |	pha
+      0287 8A         000158 |	txa
+      0288 48         000159 |	pha
+      0289 98         000160 |	tya
+      028A 48         000161 |	pha
+                      000162 |	
+                      000163 |;Change the number that is being loaded into the
+                      000164 |; 'A' register in order to change the delay time.
+      028B A9 2F      000165 |	lda #02Fh
+                      000166 |	
+      028D            000167 |OutLoop:
+      028D A2 30      000168 |	ldx #030h
+                      000169 |
+      028F            000170 |InLoop1:
+      028F A0 FF      000171 |	ldy #0ffh
+                      000172 |
+      0291            000173 |InLoop2:
+      0291 88         000174 |	dey
+      0292 F0 FD      000175 |	beq InLoop2
+                      000176 |
+      0294 CA         000177 |	dex
+      0295 D0 F8      000178 |	bne InLoop1
+                      000179 |
+      0297 38         000180 |	sec
+      0298 E9 01      000181 |	sbc #1d
+      029A D0 F1      000182 |	bne OutLoop
+                      000183 |	
+                      000184 |;Restore registers from the stack.
+      029C 68         000185 |	pla
+      029D A8         000186 |	tay
+      029E 68         000187 |	pla
+      029F AA         000188 |	tax
+      02A0 68         000189 |	pla
+                      000190 |
+      02A1 60         000191 |	rts 
+                      000192 |	
+                      000193 |; =============
+                      000194 |; = Variables =
+                      000195 |; =============
+      02A2            000196 |PlayerLeftScore:
+      02A2 00         000197 |    dbt 0d
+                      000198 |    
+      02A3            000199 |PlayerRightScore:
+      02A3 00         000200 |    dbt 0d
+                      000201 |    
+                      000202 |    end
+      
+      *** Symbol Table ***
+      {SHIFTDELAY=646, MAIN=519, POINTRIGHT=570, INLOOP2=657, SHIFTRIGHT=622, INLOOP1=655, SHIFTRIGHTLOOP=629, GAMEOVER=542, PLAYERRIGHTSCORE=675, SHIFTLEFTLOOP=605, PLAYERLEFTSCORE=674, SHIFTLEFT=598, OUTLOOP=653, MAIN2=529, POINTLEFT=542, =0}
+.   %/output
+
+
+%/group
+
+%group,title="Ping Pong"
+
+%uasm65,title="Ping Pong"
+
+    org 200h
+    
+    ; Load starting position for ball
+    LDA #00000001b
+    STA Ball
+    
+    ; Display ball
+    LDA Ball
+    STA 0a200h
+    
+; Main game loop
+GameLoop:
+    ; Ball left
+    JSR ShiftLeft
+    
+    ; Check if the left paddle is down
+    LDA 0ac00h
+    CMP #00000010b
+    BNE scoredRight
+    
+    ; Set ball right most position
+    LDA #10000000b
+    STA Ball
+    
+    ; Ball right
+    JSR ShiftRight
+    
+    ; Jump to end
+    JMP Stop
+    
+    
+; ===============
+; = Subroutines =
+; ===============   
+   
+; ### Ball shift right ###
+ShiftRight:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+; Shift logic loop
+rightShift:
+    JSR ShiftDelay
+    
+    LDA Ball
+    LSR Ball
+    STA 0a200h
+    
+    CMP #00000001b
+    BNE rightShift
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+    
+    rts
+    
+
+; ### Right winner message ###
+RightWins:
+    LDA #11111111b
+    STA 0a400h
+    
+    JMP Stop
+
+; ### Increase right score
+scoredRight:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+; Increase logic
+    INC RightScore
+    LDA RightScore
+    STA 0a400h
+    
+    CMP #5d
+    BEQ RightWins
+    
+    LDA #00000001b
+    STA Ball
+    
+    JMP GameLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+    
+    rts
+	
+
+; ### Ball shift left ###
+ShiftLeft:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+; Ball shift logic
+leftShift:
+    JSR ShiftDelay
+    
+    LDA Ball
+    ASL Ball
+    STA 0a200h
+    
+    CMP #10000000b
+    BNE leftShift
+    
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+    
+    rts
+
+    
+; ### Delay Subroutine ###
+ShiftDelay:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+;Change the number that is being loaded into the
+; 'A' register in order to change the delay time.
+	lda #02Fh
+	
+OutLoop:
+	ldx #030h
+
+InLoop1:
+	ldy #0ffh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts 
+	
+; =============
+; = Variables =
+; =============
+Ball:
+    dbt 0d
+    
+RightScore:
+    dbt 0d
+    
+LeftScore:
+    dbt 0d
+
+Stop:
+    end
+
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9018D9A02AD9A028D00A2206302AD00ACC902D022
+      	S11702142EA9808D9A022020024C9D02488A489848207E028B
+      	S1170228AD9A024E9A028D00A2C901D0F068A868AA6860A93F
+      	S117023CFF8D00A44C9D02488A489848EE9B02AD9B028D0033
+      	S1170250A4C905F0E6A9018D9A024C0B0268A868AA686048F0
+      	S11702648A489848207E02AD9A020E9A028D00A2C980D0F005
+      	S117027868A868AA6860488A489848A92FA230A0FF88F0FDCC
+      	S114028CCAD0F838E901D0F168A868AA6860000000FE
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+                      000001 |
+      0200            000002 |    org 200h
+                      000003 |    
+                      000004 |    ; Load starting position for ball
+      0200 A9 01      000005 |    LDA #00000001b
+      0202 8D 9A 02   000006 |    STA Ball
+                      000007 |    
+                      000008 |    ; Display ball
+      0205 AD 9A 02   000009 |    LDA Ball
+      0208 8D 00 A2   000010 |    STA 0a200h
+                      000011 |    
+                      000012 |; Main game loop
+      020B            000013 |GameLoop:
+                      000014 |    ; Ball left
+      020B 20 63 02   000015 |    JSR ShiftLeft
+                      000016 |    
+                      000017 |    ; Check if the left paddle is down
+      020E AD 00 AC   000018 |    LDA 0ac00h
+      0211 C9 02      000019 |    CMP #00000010b
+      0213 D0 2E      000020 |    BNE scoredRight
+                      000021 |    
+                      000022 |    ; Set ball right most position
+      0215 A9 80      000023 |    LDA #10000000b
+      0217 8D 9A 02   000024 |    STA Ball
+                      000025 |    
+                      000026 |    ; Ball right
+      021A 20 20 02   000027 |    JSR ShiftRight
+                      000028 |    
+                      000029 |    ; Jump to end
+      021D 4C 9D 02   000030 |    JMP Stop
+                      000031 |    
+                      000032 |    
+                      000033 |; ===============
+                      000034 |; = Subroutines =
+                      000035 |; ===============   
+                      000036 |   
+                      000037 |; ### Ball shift right ###
+      0220            000038 |ShiftRight:
+                      000039 |;Save registers on the stack.
+      0220 48         000040 |	pha
+      0221 8A         000041 |	txa
+      0222 48         000042 |	pha
+      0223 98         000043 |	tya
+      0224 48         000044 |	pha
+                      000045 |	
+                      000046 |; Shift logic loop
+      0225            000047 |rightShift:
+      0225 20 7E 02   000048 |    JSR ShiftDelay
+                      000049 |    
+      0228 AD 9A 02   000050 |    LDA Ball
+      022B 4E 9A 02   000051 |    LSR Ball
+      022E 8D 00 A2   000052 |    STA 0a200h
+                      000053 |    
+      0231 C9 01      000054 |    CMP #00000001b
+      0233 D0 F0      000055 |    BNE rightShift
+                      000056 |	
+                      000057 |;Restore registers from the stack.
+      0235 68         000058 |	pla
+      0236 A8         000059 |	tay
+      0237 68         000060 |	pla
+      0238 AA         000061 |	tax
+      0239 68         000062 |	pla
+                      000063 |    
+      023A 60         000064 |    rts
+                      000065 |    
+                      000066 |
+                      000067 |; ### Right winner message ###
+      023B            000068 |RightWins:
+      023B A9 FF      000069 |    LDA #11111111b
+      023D 8D 00 A4   000070 |    STA 0a400h
+                      000071 |    
+      0240 4C 9D 02   000072 |    JMP Stop
+                      000073 |
+                      000074 |; ### Increase right score
+      0243            000075 |scoredRight:
+                      000076 |;Save registers on the stack.
+      0243 48         000077 |	pha
+      0244 8A         000078 |	txa
+      0245 48         000079 |	pha
+      0246 98         000080 |	tya
+      0247 48         000081 |	pha
+                      000082 |	
+                      000083 |; Increase logic
+      0248 EE 9B 02   000084 |    INC RightScore
+      024B AD 9B 02   000085 |    LDA RightScore
+      024E 8D 00 A4   000086 |    STA 0a400h
+                      000087 |    
+      0251 C9 05      000088 |    CMP #5d
+      0253 F0 E6      000089 |    BEQ RightWins
+                      000090 |    
+      0255 A9 01      000091 |    LDA #00000001b
+      0257 8D 9A 02   000092 |    STA Ball
+                      000093 |    
+      025A 4C 0B 02   000094 |    JMP GameLoop
+                      000095 |	
+                      000096 |;Restore registers from the stack.
+      025D 68         000097 |	pla
+      025E A8         000098 |	tay
+      025F 68         000099 |	pla
+      0260 AA         000100 |	tax
+      0261 68         000101 |	pla
+                      000102 |    
+      0262 60         000103 |    rts
+                      000104 |	
+                      000105 |
+                      000106 |; ### Ball shift left ###
+      0263            000107 |ShiftLeft:
+                      000108 |;Save registers on the stack.
+      0263 48         000109 |	pha
+      0264 8A         000110 |	txa
+      0265 48         000111 |	pha
+      0266 98         000112 |	tya
+      0267 48         000113 |	pha
+                      000114 |	
+                      000115 |; Ball shift logic
+      0268            000116 |leftShift:
+      0268 20 7E 02   000117 |    JSR ShiftDelay
+                      000118 |    
+      026B AD 9A 02   000119 |    LDA Ball
+      026E 0E 9A 02   000120 |    ASL Ball
+      0271 8D 00 A2   000121 |    STA 0a200h
+                      000122 |    
+      0274 C9 80      000123 |    CMP #10000000b
+      0276 D0 F0      000124 |    BNE leftShift
+                      000125 |    
+                      000126 |;Restore registers from the stack.
+      0278 68         000127 |	pla
+      0279 A8         000128 |	tay
+      027A 68         000129 |	pla
+      027B AA         000130 |	tax
+      027C 68         000131 |	pla
+                      000132 |    
+      027D 60         000133 |    rts
+                      000134 |
+                      000135 |    
+                      000136 |; ### Delay Subroutine ###
+      027E            000137 |ShiftDelay:
+                      000138 |;Save registers on the stack.
+      027E 48         000139 |	pha
+      027F 8A         000140 |	txa
+      0280 48         000141 |	pha
+      0281 98         000142 |	tya
+      0282 48         000143 |	pha
+                      000144 |	
+                      000145 |;Change the number that is being loaded into the
+                      000146 |; 'A' register in order to change the delay time.
+      0283 A9 2F      000147 |	lda #02Fh
+                      000148 |	
+      0285            000149 |OutLoop:
+      0285 A2 30      000150 |	ldx #030h
+                      000151 |
+      0287            000152 |InLoop1:
+      0287 A0 FF      000153 |	ldy #0ffh
+                      000154 |
+      0289            000155 |InLoop2:
+      0289 88         000156 |	dey
+      028A F0 FD      000157 |	beq InLoop2
+                      000158 |
+      028C CA         000159 |	dex
+      028D D0 F8      000160 |	bne InLoop1
+                      000161 |
+      028F 38         000162 |	sec
+      0290 E9 01      000163 |	sbc #1d
+      0292 D0 F1      000164 |	bne OutLoop
+                      000165 |	
+                      000166 |;Restore registers from the stack.
+      0294 68         000167 |	pla
+      0295 A8         000168 |	tay
+      0296 68         000169 |	pla
+      0297 AA         000170 |	tax
+      0298 68         000171 |	pla
+                      000172 |
+      0299 60         000173 |	rts 
+                      000174 |	
+                      000175 |; =============
+                      000176 |; = Variables =
+                      000177 |; =============
+      029A            000178 |Ball:
+      029A 00         000179 |    dbt 0d
+                      000180 |    
+      029B            000181 |RightScore:
+      029B 00         000182 |    dbt 0d
+                      000183 |    
+      029C            000184 |LeftScore:
+      029C 00         000185 |    dbt 0d
+                      000186 |
+      029D            000187 |Stop:
+                      000188 |    end
+      
+      *** Symbol Table ***
+      {RIGHTWINS=571, SHIFTDELAY=638, BALL=666, LEFTSHIFT=616, RIGHTSHIFT=549, LEFTSCORE=668, RIGHTSCORE=667, GAMELOOP=523, INLOOP2=649, SHIFTRIGHT=544, INLOOP1=647, STOP=669, SHIFTLEFT=611, OUTLOOP=645, SCOREDRIGHT=579, =0}
+.   %/output
+
+
+
+%/group
+
+%group,title="PingPongV2"
+
+%uasm65,title="PingPongV2"
+    org 0200h
+    
+    ; Variable setup
+    LDA #00000001b
+    STA Ball
+    STA RIGHT_MOST_POSITION
+    
+    LDA #10000000b
+    STA LEFT_MOST_POSITION
+    
+; Loop for game logic loop    
+GameLoop:
+    LDA Ball
+    STA 0a200h
+    
+    ; Delay
+    JSR ShiftDelay
+    
+    ; Shift left
+    JSR ShiftLeft
+    
+    ; Check if left switch is down
+    LDA 0ac00h
+    CMP #00000010b
+    BEQ RightScored
+    
+    ; Check if ball is in left position
+    LDA Ball
+    CMP LEFT_MOST_POSITION
+    BNE GameLoop
+    
+    ; End program
+    JMP Ending
+    
+; #####################
+; #    Subroutines    #
+; #####################
+
+; ### Right wins
+WinnerRight:
+    LDA #00001111b
+    STA 0a400h
+    
+; ### Increase right score ###
+RightScored:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+; Score increase logic
+    INC ScoreRight
+    LDA ScoreRight
+    STA 0a400h
+    
+    LDA ScoreRight
+    CMP #5d
+    BEQ WinnerRight
+    
+    LDA RIGHT_MOST_POSITION
+    STA Ball
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+	
+
+; ### Left ball shift ###
+ShiftLeft:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+; Shift logic
+    ASL Ball
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts
+	
+
+; ### Delay Subroutine ###
+ShiftDelay:
+;Save registers on the stack.
+	pha
+	txa
+	pha
+	tya
+	pha
+	
+;Change the number that is being loaded into the
+; 'A' register in order to change the delay time.
+	lda #02Fh
+	
+OutLoop:
+	ldx #030h
+
+InLoop1:
+	ldy #0ffh
+
+InLoop2:
+	dey
+	beq InLoop2
+
+	dex
+	bne InLoop1
+
+	sec
+	sbc #1d
+	bne OutLoop
+	
+;Restore registers from the stack.
+	pla
+	tay
+	pla
+	tax
+	pla
+
+	rts 
+    
+    
+; ###################
+; #    Variables    #
+; ###################
+
+; Ball location
+Ball:
+    dbt 0d
+    
+; Left most position allowed
+LEFT_MOST_POSITION:
+    dbt 0d
+    
+; Right most position allowed
+RIGHT_MOST_POSITION:
+    dbt 0d
+    
+ScoreRight:
+    dbt 0d
+    
+ScoreLeft:
+    dbt 0d
+
+Ending:
+    end
+
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9018D7B028D7D02A9808D7C02AD7B028D00A22079
+      	S11702145F02205102AD00ACC902F010AD7B02CD7C02D0E5B0
+      	S11702284C8002A90F8D00A4488A489848EE7E02AD7E028DE5
+      	S117023C00A4AD7E02C905F0E6AD7D028D7B0268A868AA6875
+      	S117025060488A4898480E7B0268A868AA6860488A489848CD
+      	S1170264A92FA230A0FF88F0FDCAD0F838E901D0F168A868D7
+      	S10B0278AA6860000000000008
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+      0200            000001 |    org 0200h
+                      000002 |    
+                      000003 |    ; Variable setup
+      0200 A9 01      000004 |    LDA #00000001b
+      0202 8D 7B 02   000005 |    STA Ball
+      0205 8D 7D 02   000006 |    STA RIGHT_MOST_POSITION
+                      000007 |    
+      0208 A9 80      000008 |    LDA #10000000b
+      020A 8D 7C 02   000009 |    STA LEFT_MOST_POSITION
+                      000010 |    
+                      000011 |; Loop for game logic loop    
+      020D            000012 |GameLoop:
+      020D AD 7B 02   000013 |    LDA Ball
+      0210 8D 00 A2   000014 |    STA 0a200h
+                      000015 |    
+                      000016 |    ; Delay
+      0213 20 5F 02   000017 |    JSR ShiftDelay
+                      000018 |    
+                      000019 |    ; Shift left
+      0216 20 51 02   000020 |    JSR ShiftLeft
+                      000021 |    
+                      000022 |    ; Check if left switch is down
+      0219 AD 00 AC   000023 |    LDA 0ac00h
+      021C C9 02      000024 |    CMP #00000010b
+      021E F0 10      000025 |    BEQ RightScored
+                      000026 |    
+                      000027 |    ; Check if ball is in left position
+      0220 AD 7B 02   000028 |    LDA Ball
+      0223 CD 7C 02   000029 |    CMP LEFT_MOST_POSITION
+      0226 D0 E5      000030 |    BNE GameLoop
+                      000031 |    
+                      000032 |    ; End program
+      0228 4C 80 02   000033 |    JMP Ending
+                      000034 |    
+                      000035 |; #####################
+                      000036 |; #    Subroutines    #
+                      000037 |; #####################
+                      000038 |
+                      000039 |; ### Right wins
+      022B            000040 |WinnerRight:
+      022B A9 0F      000041 |    LDA #00001111b
+      022D 8D 00 A4   000042 |    STA 0a400h
+                      000043 |    
+                      000044 |; ### Increase right score ###
+      0230            000045 |RightScored:
+                      000046 |;Save registers on the stack.
+      0230 48         000047 |	pha
+      0231 8A         000048 |	txa
+      0232 48         000049 |	pha
+      0233 98         000050 |	tya
+      0234 48         000051 |	pha
+                      000052 |	
+                      000053 |; Score increase logic
+      0235 EE 7E 02   000054 |    INC ScoreRight
+      0238 AD 7E 02   000055 |    LDA ScoreRight
+      023B 8D 00 A4   000056 |    STA 0a400h
+                      000057 |    
+      023E AD 7E 02   000058 |    LDA ScoreRight
+      0241 C9 05      000059 |    CMP #5d
+      0243 F0 E6      000060 |    BEQ WinnerRight
+                      000061 |    
+      0245 AD 7D 02   000062 |    LDA RIGHT_MOST_POSITION
+      0248 8D 7B 02   000063 |    STA Ball
+                      000064 |	
+                      000065 |;Restore registers from the stack.
+      024B 68         000066 |	pla
+      024C A8         000067 |	tay
+      024D 68         000068 |	pla
+      024E AA         000069 |	tax
+      024F 68         000070 |	pla
+                      000071 |
+      0250 60         000072 |	rts
+                      000073 |	
+                      000074 |
+                      000075 |; ### Left ball shift ###
+      0251            000076 |ShiftLeft:
+                      000077 |;Save registers on the stack.
+      0251 48         000078 |	pha
+      0252 8A         000079 |	txa
+      0253 48         000080 |	pha
+      0254 98         000081 |	tya
+      0255 48         000082 |	pha
+                      000083 |	
+                      000084 |; Shift logic
+      0256 0E 7B 02   000085 |    ASL Ball
+                      000086 |	
+                      000087 |;Restore registers from the stack.
+      0259 68         000088 |	pla
+      025A A8         000089 |	tay
+      025B 68         000090 |	pla
+      025C AA         000091 |	tax
+      025D 68         000092 |	pla
+                      000093 |
+      025E 60         000094 |	rts
+                      000095 |	
+                      000096 |
+                      000097 |; ### Delay Subroutine ###
+      025F            000098 |ShiftDelay:
+                      000099 |;Save registers on the stack.
+      025F 48         000100 |	pha
+      0260 8A         000101 |	txa
+      0261 48         000102 |	pha
+      0262 98         000103 |	tya
+      0263 48         000104 |	pha
+                      000105 |	
+                      000106 |;Change the number that is being loaded into the
+                      000107 |; 'A' register in order to change the delay time.
+      0264 A9 2F      000108 |	lda #02Fh
+                      000109 |	
+      0266            000110 |OutLoop:
+      0266 A2 30      000111 |	ldx #030h
+                      000112 |
+      0268            000113 |InLoop1:
+      0268 A0 FF      000114 |	ldy #0ffh
+                      000115 |
+      026A            000116 |InLoop2:
+      026A 88         000117 |	dey
+      026B F0 FD      000118 |	beq InLoop2
+                      000119 |
+      026D CA         000120 |	dex
+      026E D0 F8      000121 |	bne InLoop1
+                      000122 |
+      0270 38         000123 |	sec
+      0271 E9 01      000124 |	sbc #1d
+      0273 D0 F1      000125 |	bne OutLoop
+                      000126 |	
+                      000127 |;Restore registers from the stack.
+      0275 68         000128 |	pla
+      0276 A8         000129 |	tay
+      0277 68         000130 |	pla
+      0278 AA         000131 |	tax
+      0279 68         000132 |	pla
+                      000133 |
+      027A 60         000134 |	rts 
+                      000135 |    
+                      000136 |    
+                      000137 |; ###################
+                      000138 |; #    Variables    #
+                      000139 |; ###################
+                      000140 |
+                      000141 |; Ball location
+      027B            000142 |Ball:
+      027B 00         000143 |    dbt 0d
+                      000144 |    
+                      000145 |; Left most position allowed
+      027C            000146 |LEFT_MOST_POSITION:
+      027C 00         000147 |    dbt 0d
+                      000148 |    
+                      000149 |; Right most position allowed
+      027D            000150 |RIGHT_MOST_POSITION:
+      027D 00         000151 |    dbt 0d
+                      000152 |    
+      027E            000153 |ScoreRight:
+      027E 00         000154 |    dbt 0d
+                      000155 |    
+      027F            000156 |ScoreLeft:
+      027F 00         000157 |    dbt 0d
+                      000158 |
+      0280            000159 |Ending:
+                      000160 |    end
+      
+      *** Symbol Table ***
+      {SCORELEFT=639, SHIFTDELAY=607, ENDING=640, BALL=635, LEFT_MOST_POSITION=636, GAMELOOP=525, INLOOP2=618, INLOOP1=616, RIGHT_MOST_POSITION=637, SHIFTLEFT=593, RIGHTSCORED=560, OUTLOOP=614, SCORERIGHT=638, =0, WINNERRIGHT=555}
+.   %/output
+
+
+
+%/group
+
