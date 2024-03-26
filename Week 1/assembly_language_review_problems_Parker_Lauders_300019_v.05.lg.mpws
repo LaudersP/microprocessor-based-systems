@@ -49,7 +49,7 @@ destination:
 
 %/uasm65
 
-    %output,mpversion="347",preserve="false"
+    %output,mpversion="346",preserve="false"
       *** Executable Code ***
       
       %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
@@ -67,7 +67,7 @@ destination:
       	S11002C80000000000000000000000000025
       	S9030000FC
       %/s19
-      
+       
       *** List File ***
       
       0200            000001 |	org 0200h
@@ -270,7 +270,7 @@ string1:
 	end
 %/uasm65
 
-    %output,mpversion="347",preserve="false"
+    %output,mpversion="346",preserve="false"
       *** Executable Code ***
       
       %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
@@ -382,19 +382,43 @@ Issue: The bytes are not looped back (from the MSB to the LSB).
 %uasm65,title=""
 	org 0200h
 
-main:
-    LDX #0d
-    LDY #0d
-    
-loop:
-    ROL numbers,x
-    ROL numbers,x
-    ROL numbers,x
-    ROL numbers,x
-    
-    INX
-    CPX #100d
-    BNE loop
+	LDX #0d
+	
+Loop:
+    ; Load number
+	LDA numbers,X
+	PHA
+	
+	; Get upper nibble
+	LSR A
+	LSR A
+	LSR A
+	LSR A
+	
+	; Store temp
+	STA temp
+	
+	; Get lower nibble
+	PLA
+	AND #0Fh
+	ASL A
+	ASL A
+	ASL A
+	ASL A
+	
+	; Combine nibbles
+	ORA temp
+	
+	; Store
+	STA numbers,X
+	
+	; Increase and check if all numbers were flipped
+	INX
+	CPX #100d
+	BNE Loop
+	
+	RTS
+	
 
 numbers:
 	dbt 1Fh,4Dh,38h,4Ch,23h,D9h,FCh,36h,CFh,17h,35h,70h
@@ -406,150 +430,171 @@ numbers:
 	dbt 7Ch,19h,6Eh,89h,B5h,66h,C2h,EFh,89h,96h,F3h,63h
 	dbt 82h,F0h,56h,DCh,9Ah,7Eh,FCh,29h,B4h,B3h,CDh,3Dh
 	dbt 58h,BEh,DCh,44h
+	
+temp:
+    dbt 0d
 
 	end
 
 %/uasm65
 
-    %output,mpversion="347",preserve="false"
+    %output,mpversion="346",preserve="false"
       *** Executable Code ***
       
       %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
       	S00700005541534DC2
-      	S1170200A200A0007E15027E15027E15027E1502E8E064D054
-      	S1170214EF1F4D384C23D9FC36CF1735708F9E209B272C7B84
-      	S117022830E47C9B89EA78A05228D5DC698875807DD7559DB1
-      	S117023CBC12D27FDE92118AE6AF5E89D4925AA2B8BBB6D8A1
-      	S117025054DB5D58B97ECD72192C7C77307C196E89B566C26B
-      	S1170264EF8996F36382F056DC9A7EFC29B4B3CD3D58BEDCDA
-      	S1040278443D
+      	S1170200A200BD2002484A4A4A4A8D840268290F0A0A0A0A1A
+      	S11702140D84029D2002E8E064D0E3601F4D384C23D9FC3623
+      	S1170228CF1735708F9E209B272C7B30E47C9B89EA78A05275
+      	S117023C28D5DC698875807DD7559DBC12D27FDE92118AE695
+      	S1170250AF5E89D4925AA2B8BBB6D854DB5D58B97ECD72192A
+      	S11702642C7C77307C196E89B566C2EF8996F36382F056DCC2
+      	S11002789A7EFC29B4B3CD3D58BEDC440091
       	S9030000FC
       %/s19
-       
+        
       *** List File ***
       
       0200            000001 |	org 0200h
                       000002 |
-      0200            000003 |main:
-      0200 A2 00      000004 |    LDX #0d
-      0202 A0 00      000005 |    LDY #0d
-                      000006 |    
-      0204            000007 |loop:
-      0204 7E 15 02   000008 |    ROR numbers,x
-      0207 7E 15 02   000009 |    ROR numbers,x
-      020A 7E 15 02   000010 |    ROR numbers,x
-      020D 7E 15 02   000011 |    ROR numbers,x
-                      000012 |    
-      0210 E8         000013 |    INX
-      0211 E0 64      000014 |    CPX #100d
-      0213 D0 EF      000015 |    BNE loop
-                      000016 |
-      0215            000017 |numbers:
-      0215 1F         000018 |	dbt 1Fh,4Dh,38h,4Ch,23h,D9h,FCh,36h,CFh,17h,35h,70h
-      0216 4D               
-      0217 38               
-      0218 4C               
-      0219 23               
-      021A D9               
-      021B FC               
-      021C 36               
-      021D CF               
-      021E 17               
-      021F 35               
-      0220 70               
-      0221 8F         000019 |	dbt 8Fh,9Eh,20h,9Bh,27h,2Ch,7Bh,30h,E4h,7Ch,9Bh,89h
-      0222 9E               
-      0223 20               
-      0224 9B               
-      0225 27               
-      0226 2C               
-      0227 7B               
-      0228 30               
-      0229 E4               
-      022A 7C               
-      022B 9B               
-      022C 89               
-      022D EA         000020 |	dbt EAh,78h,A0h,52h,28h,D5h,DCh,69h,88h,75h,80h,7Dh
-      022E 78               
-      022F A0               
-      0230 52               
-      0231 28               
-      0232 D5               
-      0233 DC               
-      0234 69               
-      0235 88               
-      0236 75               
-      0237 80               
-      0238 7D               
-      0239 D7         000021 |	dbt D7h,55h,9Dh,BCh,12h,D2h,7Fh,DEh,92h,11h,8Ah,E6h
-      023A 55               
-      023B 9D               
-      023C BC               
-      023D 12               
-      023E D2               
-      023F 7F               
-      0240 DE               
-      0241 92               
-      0242 11               
-      0243 8A               
-      0244 E6               
-      0245 AF         000022 |	dbt AFh,5Eh,89h,D4h,92h,5Ah,A2h,B8h,BBh,B6h,D8h,54h
-      0246 5E               
-      0247 89               
-      0248 D4               
-      0249 92               
-      024A 5A               
-      024B A2               
-      024C B8               
-      024D BB               
-      024E B6               
-      024F D8               
-      0250 54               
-      0251 DB         000023 |	dbt DBh,5Dh,58h,B9h,7Eh,CDh,72h,19h,2Ch,7Ch,77h,30h
-      0252 5D               
-      0253 58               
-      0254 B9               
-      0255 7E               
-      0256 CD               
-      0257 72               
-      0258 19               
-      0259 2C               
-      025A 7C               
-      025B 77               
-      025C 30               
-      025D 7C         000024 |	dbt 7Ch,19h,6Eh,89h,B5h,66h,C2h,EFh,89h,96h,F3h,63h
-      025E 19               
-      025F 6E               
-      0260 89               
-      0261 B5               
-      0262 66               
-      0263 C2               
-      0264 EF               
-      0265 89               
-      0266 96               
-      0267 F3               
-      0268 63               
-      0269 82         000025 |	dbt 82h,F0h,56h,DCh,9Ah,7Eh,FCh,29h,B4h,B3h,CDh,3Dh
-      026A F0               
-      026B 56               
-      026C DC               
-      026D 9A               
-      026E 7E               
-      026F FC               
-      0270 29               
-      0271 B4               
-      0272 B3               
-      0273 CD               
-      0274 3D               
-      0275 58         000026 |	dbt 58h,BEh,DCh,44h
-      0276 BE               
+      0200 A2 00      000003 |	LDX #0d
+                      000004 |	
+      0202            000005 |Loop:
+      0202 BD 20 02   000006 |	LDA numbers,X
+      0205 48         000007 |	PHA
+                      000008 |	
+      0206 4A         000009 |	LSR A
+      0207 4A         000010 |	LSR A
+      0208 4A         000011 |	LSR A
+      0209 4A         000012 |	LSR A
+      020A 8D 84 02   000013 |	STA temp
+                      000014 |	
+      020D 68         000015 |	PLA
+      020E 29 0F      000016 |	AND #0Fh
+      0210 0A         000017 |	ASL A
+      0211 0A         000018 |	ASL A
+      0212 0A         000019 |	ASL A
+      0213 0A         000020 |	ASL A
+      0214 0D 84 02   000021 |	ORA temp
+                      000022 |	
+      0217 9D 20 02   000023 |	STA numbers,X
+                      000024 |	
+      021A E8         000025 |	INX
+      021B E0 64      000026 |	CPX #100d
+      021D D0 E3      000027 |	BNE Loop
+                      000028 |	
+      021F 60         000029 |	RTS
+                      000030 |	
+                      000031 |
+      0220            000032 |numbers:
+      0220 1F         000033 |	dbt 1Fh,4Dh,38h,4Ch,23h,D9h,FCh,36h,CFh,17h,35h,70h
+      0221 4D               
+      0222 38               
+      0223 4C               
+      0224 23               
+      0225 D9               
+      0226 FC               
+      0227 36               
+      0228 CF               
+      0229 17               
+      022A 35               
+      022B 70               
+      022C 8F         000034 |	dbt 8Fh,9Eh,20h,9Bh,27h,2Ch,7Bh,30h,E4h,7Ch,9Bh,89h
+      022D 9E               
+      022E 20               
+      022F 9B               
+      0230 27               
+      0231 2C               
+      0232 7B               
+      0233 30               
+      0234 E4               
+      0235 7C               
+      0236 9B               
+      0237 89               
+      0238 EA         000035 |	dbt EAh,78h,A0h,52h,28h,D5h,DCh,69h,88h,75h,80h,7Dh
+      0239 78               
+      023A A0               
+      023B 52               
+      023C 28               
+      023D D5               
+      023E DC               
+      023F 69               
+      0240 88               
+      0241 75               
+      0242 80               
+      0243 7D               
+      0244 D7         000036 |	dbt D7h,55h,9Dh,BCh,12h,D2h,7Fh,DEh,92h,11h,8Ah,E6h
+      0245 55               
+      0246 9D               
+      0247 BC               
+      0248 12               
+      0249 D2               
+      024A 7F               
+      024B DE               
+      024C 92               
+      024D 11               
+      024E 8A               
+      024F E6               
+      0250 AF         000037 |	dbt AFh,5Eh,89h,D4h,92h,5Ah,A2h,B8h,BBh,B6h,D8h,54h
+      0251 5E               
+      0252 89               
+      0253 D4               
+      0254 92               
+      0255 5A               
+      0256 A2               
+      0257 B8               
+      0258 BB               
+      0259 B6               
+      025A D8               
+      025B 54               
+      025C DB         000038 |	dbt DBh,5Dh,58h,B9h,7Eh,CDh,72h,19h,2Ch,7Ch,77h,30h
+      025D 5D               
+      025E 58               
+      025F B9               
+      0260 7E               
+      0261 CD               
+      0262 72               
+      0263 19               
+      0264 2C               
+      0265 7C               
+      0266 77               
+      0267 30               
+      0268 7C         000039 |	dbt 7Ch,19h,6Eh,89h,B5h,66h,C2h,EFh,89h,96h,F3h,63h
+      0269 19               
+      026A 6E               
+      026B 89               
+      026C B5               
+      026D 66               
+      026E C2               
+      026F EF               
+      0270 89               
+      0271 96               
+      0272 F3               
+      0273 63               
+      0274 82         000040 |	dbt 82h,F0h,56h,DCh,9Ah,7Eh,FCh,29h,B4h,B3h,CDh,3Dh
+      0275 F0               
+      0276 56               
       0277 DC               
-      0278 44               
-                      000027 |
-                      000028 |	end
+      0278 9A               
+      0279 7E               
+      027A FC               
+      027B 29               
+      027C B4               
+      027D B3               
+      027E CD               
+      027F 3D               
+      0280 58         000041 |	dbt 58h,BEh,DCh,44h
+      0281 BE               
+      0282 DC               
+      0283 44               
+                      000042 |	
+      0284            000043 |temp:
+      0284 00         000044 |    dbt 0d
+                      000045 |
+                      000046 |	end
       
       *** Symbol Table ***
-      {MAIN=512, LOOP=516, NUMBERS=533, =0}
+      {LOOP=514, TEMP=644, NUMBERS=544, =0}
 .   %/output
 
 
@@ -564,16 +609,110 @@ Write a program that contains a subroutine that prints the string
 
 
 %uasm65,title=""
+PrntMess: equ E00Ch ;Print a message to the user.
+
 	org 0200h
 
 main:
-;Place your program code here.
+    JSR Subroutine
+    JSR Subroutine
+    JSR Subroutine
+    
+    brk
 
 
+Subroutine:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    LDX #string<
+    LDY #string>
+    JSR PrntMess
+    
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    RTS
+
+string:
+    dbt 0ah,0dh
+    dbt "A stitch in time saves nine."
+    dbt 0d
 
 	end
 
 %/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200200A02200A02200A0200488A489848A21CA00220E8
+      	S11702140CE068A868AA68600A0D412073746974636820696C
+      	S11702286E2074696D65207361766573206E696E652E000047
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+      0000            000001 |PrntMess: equ E00Ch ;Print a message to the user.
+                      000002 |
+      0200            000003 |	org 0200h
+                      000004 |
+      0200            000005 |main:
+      0200 20 0A 02   000006 |    JSR Subroutine
+      0203 20 0A 02   000007 |    JSR Subroutine
+      0206 20 0A 02   000008 |    JSR Subroutine
+                      000009 |    
+      0209 00         000010 |    brk
+                      000011 |
+                      000012 |
+      020A            000013 |Subroutine:
+      020A 48         000014 |    PHA
+      020B 8A         000015 |    TXA
+      020C 48         000016 |    PHA
+      020D 98         000017 |    TYA
+      020E 48         000018 |    PHA
+                      000019 |    
+      020F A2 1C      000020 |    LDX #string<
+      0211 A0 02      000021 |    LDY #string>
+      0213 20 0C E0   000022 |    JSR PrntMess
+                      000023 |    
+      0216 68         000024 |    PLA
+      0217 A8         000025 |    TAY
+      0218 68         000026 |    PLA
+      0219 AA         000027 |    TAX
+      021A 68         000028 |    PLA
+                      000029 |    
+      021B 60         000030 |    RTS
+                      000031 |
+      021C            000032 |string:
+      021C 0A         000033 |    dbt 0ah,0dh
+      021D 0D               
+      021E 41         000034 |    dbt "A stitch in time saves nine."
+      021F 20 73 74         
+      0222 69 74 63         
+      0225 68 20 69         
+      0228 6E 20 74         
+      022B 69 6D 65         
+      022E 20 73 61         
+      0231 76 65 73         
+      0234 20 6E 69         
+      0237 6E 65 2E         
+      023A 00         000035 |    dbt 0d
+                      000036 |
+                      000037 |	end
+      
+      *** Symbol Table ***
+      {STRING=540, SUBROUTINE=522, MAIN=512, PRNTMESS=57356, =0}
+.   %/output
 
 
 
@@ -618,9 +757,349 @@ are at memory location A600 to move a single light around the 8x2 grid
 of LEDs that are formed by memory locations A200h and A400h.
 
 %uasm65,title=""
-	org 0200h
+    org 200h
+    
+    LDA #00000001b
+    STA LED
+    
+Loop:
+    JSR display
+    JSR left
+    JSR right
+    JSR up
+    JSR down
+    
+    JMP Loop
+    
+left:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check if left move is wanted
+    LDA 0a600h
+    CMP #00001000b
+    BNE endLeft
+    
+    ; Check if LED is leftmost
+    LDA LED
+    CMP #10000000b
+    BEQ endLeft
+    
+    ; Move LED
+    ASL LED
+    JSR delay
+    
+endLeft:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    rts
+    
+delay:
+    ; Save reg
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    LDA #0fh
+    
+OutLoop:
+    LDX #030h
+    
+InLoop1:
+    LDY #0FFh
+    
+InLoop2:
+    DEY
+    BEQ InLoop2
+    
+    DEX
+    BNE InLoop1
+    
+    SEC
+    SBC #1d
+    BNE OutLoop
+    
+; Restore registers
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    RTS
+    
+right:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check if right move is wanted
+    LDA 0a600h
+    CMP #00000100b
+    BNE endRight
+    
+    ; Check if LED is rightmost
+    LDA LED
+    CMP #00000001b
+    BEQ endRight
+    
+    ; Move LED
+    LSR LED
+    JSR delay
+    
+endRight:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    rts
+    
+up:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check if up move is wanted
+    LDA 0a600h
+    CMP #00000010b
+    BNE endUp
+    
+    ; Change its layer
+    LDA #0d
+    STA LEVEL
 
+endUp:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    rts
+    
+down:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check if down move is wanted
+    LDA 0a600h
+    CMP #00000001b
+    BNE endDown
+    
+    ; Change its layer
+    LDA #1d
+    STA LEVEL
 
-	end
-
+endDown:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    rts
+    
+display:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check for top level
+    LDA LEVEL
+    CMP #0d
+    BEQ displayTop
+    
+    ; Check for bottom level
+    LDA LEVEL
+    CMP #1d
+    BEQ displayBottom
+    
+    JMP displayEnd
+    
+displayTop:
+    LDA LED
+    STA 0a200h
+    LDA #0d
+    STA 0a400h
+    JMP displayEnd
+    
+displayBottom:
+    LDA LED
+    STA 0a400h
+    LDA #0d
+    STA 0a200h
+    JMP displayEnd
+    
+displayEnd:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    RTS
+    
+LED:
+    dbt 0d
+    
+LEVEL:
+    dbt 0d
+    
+    end
 %/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9018D6B028D00A2201702203302AD6B028D00A23C
+      	S11702144C0802488A489848AD00A6C908D00AAD6B02C98021
+      	S1170228F0030E6B0268A868AA6860488A489848AD00A6C950
+      	S117023C08D0EEAD6B02C901F0E74E6B0268A868AA6860483C
+      	S11702508A489848A90FA2FFA0FF88F0FDCAD0F838E901D0F3
+      	S10C0264F168A868AA68600000B2
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+      0200            000001 |	org 0200h
+                      000002 |	
+      0200 A9 01      000003 |	LDA #00000001b
+      0202 8D 6B 02   000004 |	STA LED
+      0205 8D 00 A2   000005 |	STA 0a200h
+                      000006 |	
+      0208            000007 |Loop:
+      0208 20 17 02   000008 |    JSR moveLeft
+      020B 20 33 02   000009 |    JSR moveRight
+                      000010 |    
+      020E AD 6B 02   000011 |    LDA LED
+      0211 8D 00 A2   000012 |    STA 0a200h
+                      000013 |
+      0214 4C 08 02   000014 |    JMP Loop
+                      000015 |
+      0217            000016 |moveLeft:
+      0217 48         000017 |    PHA
+      0218 8A         000018 |    TXA
+      0219 48         000019 |    PHA
+      021A 98         000020 |    TYA
+      021B 48         000021 |    PHA
+                      000022 |    
+                      000023 |    ; Check if left move is wanted
+      021C AD 00 A6   000024 |    LDA 0a600h
+      021F C9 08      000025 |    CMP #00001000b
+      0221 D0 0A      000026 |    BNE skipMoveLeft
+                      000027 |    
+                      000028 |    ; Check if the LED is maxed
+      0223 AD 6B 02   000029 |    LDA LED
+      0226 C9 80      000030 |    CMP #10000000b
+      0228 F0 03      000031 |    BEQ skipMoveLeft
+                      000032 |    
+                      000033 |    ; Move the LED
+      022A 0E 6B 02   000034 |    ASL LED
+                      000035 |    
+      022D            000036 |skipMoveLeft:    
+      022D 68         000037 |    PLA
+      022E A8         000038 |    TAY
+      022F 68         000039 |    PLA
+      0230 AA         000040 |    TAX
+      0231 68         000041 |    PLA
+                      000042 |    
+      0232 60         000043 |    RTS
+                      000044 |    
+      0233            000045 |moveRight:
+      0233 48         000046 |    PHA
+      0234 8A         000047 |    TXA
+      0235 48         000048 |    PHA
+      0236 98         000049 |    TYA
+      0237 48         000050 |    PHA
+                      000051 |    
+                      000052 |    ; Check if right move is wanted
+      0238 AD 00 A6   000053 |    LDA 0a600h
+      023B C9 08      000054 |    CMP #00001000b
+      023D D0 EE      000055 |    BNE skipMoveLeft
+                      000056 |    
+                      000057 |    ; Check if the LED is maxed
+      023F AD 6B 02   000058 |    LDA LED
+      0242 C9 01      000059 |    CMP #00000001b
+      0244 F0 E7      000060 |    BEQ skipMoveLeft
+                      000061 |    
+                      000062 |    ; Move the LED
+      0246 4E 6B 02   000063 |    LSR LED
+                      000064 |    
+      0249            000065 |skipMoveRight:    
+      0249 68         000066 |    PLA
+      024A A8         000067 |    TAY
+      024B 68         000068 |    PLA
+      024C AA         000069 |    TAX
+      024D 68         000070 |    PLA
+                      000071 |    
+      024E 60         000072 |    RTS
+                      000073 |
+                      000074 |    
+      024F            000075 |delay:
+                      000076 |    ; Save reg
+      024F 48         000077 |    PHA
+      0250 8A         000078 |    TXA
+      0251 48         000079 |    PHA
+      0252 98         000080 |    TYA
+      0253 48         000081 |    PHA
+                      000082 |    
+      0254 A9 0F      000083 |    LDA #0fh
+                      000084 |    
+      0256            000085 |OutLoop:
+      0256 A2 FF      000086 |    LDX #0FFh
+                      000087 |    
+      0258            000088 |InLoop1:
+      0258 A0 FF      000089 |    LDY #0FFh
+                      000090 |    
+      025A            000091 |InLoop2:
+      025A 88         000092 |    DEY
+      025B F0 FD      000093 |    BEQ InLoop2
+                      000094 |    
+      025D CA         000095 |    DEX
+      025E D0 F8      000096 |    BNE InLoop1
+                      000097 |    
+      0260 38         000098 |    SEC
+      0261 E9 01      000099 |    SBC #1d
+      0263 D0 F1      000100 |    BNE OutLoop
+                      000101 |    
+                      000102 |; Restore registers
+      0265 68         000103 |    PLA
+      0266 A8         000104 |    TAY
+      0267 68         000105 |    PLA
+      0268 AA         000106 |    TAX
+      0269 68         000107 |    PLA
+      026A 60         000108 |    RTS
+                      000109 |
+      026B            000110 |LED:
+      026B 00         000111 |    dbt 0d
+                      000112 |    
+      026C            000113 |LAYER:
+      026C 00         000114 |    dbt 0d
+                      000115 |    
+                      000116 |	end
+      
+      *** Symbol Table ***
+      {DELAY=591, LAYER=620, SKIPMOVERIGHT=585, MOVERIGHT=563, LOOP=520, INLOOP2=602, LED=619, INLOOP1=600, MOVELEFT=535, OUTLOOP=598, =0, SKIPMOVELEFT=557}
+.   %/output

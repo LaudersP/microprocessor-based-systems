@@ -1,0 +1,445 @@
+%uasm65,title=""
+    org 200h
+    
+    LDA #00000001b
+    STA LED
+    
+Loop:
+    JSR display
+    JSR left
+    JSR right
+    JSR up
+    JSR down
+    
+    JMP Loop
+    
+left:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check if left move is wanted
+    LDA 0a600h
+    CMP #00001000b
+    BNE endLeft
+    
+    ; Check if LED is leftmost
+    LDA LED
+    CMP #10000000b
+    BEQ endLeft
+    
+    ; Move LED
+    ASL LED
+    JSR delay
+    
+endLeft:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    rts
+    
+delay:
+    ; Save reg
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    LDA #0fh
+    
+OutLoop:
+    LDX #030h
+    
+InLoop1:
+    LDY #0FFh
+    
+InLoop2:
+    DEY
+    BEQ InLoop2
+    
+    DEX
+    BNE InLoop1
+    
+    SEC
+    SBC #1d
+    BNE OutLoop
+    
+; Restore registers
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    RTS
+    
+right:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check if right move is wanted
+    LDA 0a600h
+    CMP #00000100b
+    BNE endRight
+    
+    ; Check if LED is rightmost
+    LDA LED
+    CMP #00000001b
+    BEQ endRight
+    
+    ; Move LED
+    LSR LED
+    JSR delay
+    
+endRight:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    rts
+    
+up:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check if up move is wanted
+    LDA 0a600h
+    CMP #00000010b
+    BNE endUp
+    
+    ; Change its layer
+    LDA #0d
+    STA LEVEL
+
+endUp:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    rts
+    
+down:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check if down move is wanted
+    LDA 0a600h
+    CMP #00000001b
+    BNE endDown
+    
+    ; Change its layer
+    LDA #1d
+    STA LEVEL
+
+endDown:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    rts
+    
+display:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ; Check for top level
+    LDA LEVEL
+    CMP #0d
+    BEQ displayTop
+    
+    ; Check for bottom level
+    LDA LEVEL
+    CMP #1d
+    BEQ displayBottom
+    
+    JMP displayEnd
+    
+displayTop:
+    LDA LED
+    STA 0a200h
+    LDA #0d
+    STA 0a400h
+    JMP displayEnd
+    
+displayBottom:
+    LDA LED
+    STA 0a400h
+    LDA #0d
+    STA 0a200h
+    JMP displayEnd
+    
+displayEnd:
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    
+    RTS
+    
+LED:
+    dbt 0d
+    
+LEVEL:
+    dbt 0d
+    
+    end
+%/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A9018DD702209F022017022052022071022088022B
+      	S11702144C0502488A489848AD00A6C908D00DADD702C980B5
+      	S1170228F0060ED70220360268A868AA6860488A489848A9FC
+      	S117023C0FA230A0FF88F0FDCAD0F838E901D0F168A868AA1E
+      	S11702506860488A489848AD00A6C904D00DADD702C901F097
+      	S1170264064ED70220360268A868AA6860488A489848AD006C
+      	S1170278A6C902D005A9008DD80268A868AA6860488A48987C
+      	S117028C48AD00A6C901D005A9018DD80268A868AA686048DD
+      	S11702A08A489848ADD802C900F00AADD802C901F0114CD1DB
+      	S11702B402ADD7028D00A2A9008D00A44CD102ADD7028D006F
+      	S11402C8A4A9008D00A24CD10268A868AA686000009C
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+      0200            000001 |    org 200h
+                      000002 |    
+      0200 A9 01      000003 |    LDA #00000001b
+      0202 8D D7 02   000004 |    STA LED
+                      000005 |    
+      0205            000006 |Loop:
+      0205 20 9F 02   000007 |    JSR display
+      0208 20 17 02   000008 |    JSR left
+      020B 20 52 02   000009 |    JSR right
+      020E 20 71 02   000010 |    JSR up
+      0211 20 88 02   000011 |    JSR down
+                      000012 |    
+      0214 4C 05 02   000013 |    JMP Loop
+                      000014 |    
+      0217            000015 |left:
+      0217 48         000016 |    PHA
+      0218 8A         000017 |    TXA
+      0219 48         000018 |    PHA
+      021A 98         000019 |    TYA
+      021B 48         000020 |    PHA
+                      000021 |    
+                      000022 |    ; Check if left move is wanted
+      021C AD 00 A6   000023 |    LDA 0a600h
+      021F C9 08      000024 |    CMP #00001000b
+      0221 D0 0D      000025 |    BNE endLeft
+                      000026 |    
+                      000027 |    ; Check if LED is leftmost
+      0223 AD D7 02   000028 |    LDA LED
+      0226 C9 80      000029 |    CMP #10000000b
+      0228 F0 06      000030 |    BEQ endLeft
+                      000031 |    
+                      000032 |    ; Move LED
+      022A 0E D7 02   000033 |    ASL LED
+      022D 20 36 02   000034 |    JSR delay
+                      000035 |    
+      0230            000036 |endLeft:
+      0230 68         000037 |    PLA
+      0231 A8         000038 |    TAY
+      0232 68         000039 |    PLA
+      0233 AA         000040 |    TAX
+      0234 68         000041 |    PLA
+                      000042 |    
+      0235 60         000043 |    rts
+                      000044 |    
+      0236            000045 |delay:
+                      000046 |    ; Save reg
+      0236 48         000047 |    PHA
+      0237 8A         000048 |    TXA
+      0238 48         000049 |    PHA
+      0239 98         000050 |    TYA
+      023A 48         000051 |    PHA
+                      000052 |    
+      023B A9 0F      000053 |    LDA #0fh
+                      000054 |    
+      023D            000055 |OutLoop:
+      023D A2 30      000056 |    LDX #030h
+                      000057 |    
+      023F            000058 |InLoop1:
+      023F A0 FF      000059 |    LDY #0FFh
+                      000060 |    
+      0241            000061 |InLoop2:
+      0241 88         000062 |    DEY
+      0242 F0 FD      000063 |    BEQ InLoop2
+                      000064 |    
+      0244 CA         000065 |    DEX
+      0245 D0 F8      000066 |    BNE InLoop1
+                      000067 |    
+      0247 38         000068 |    SEC
+      0248 E9 01      000069 |    SBC #1d
+      024A D0 F1      000070 |    BNE OutLoop
+                      000071 |    
+                      000072 |; Restore registers
+      024C 68         000073 |    PLA
+      024D A8         000074 |    TAY
+      024E 68         000075 |    PLA
+      024F AA         000076 |    TAX
+      0250 68         000077 |    PLA
+      0251 60         000078 |    RTS
+                      000079 |    
+      0252            000080 |right:
+      0252 48         000081 |    PHA
+      0253 8A         000082 |    TXA
+      0254 48         000083 |    PHA
+      0255 98         000084 |    TYA
+      0256 48         000085 |    PHA
+                      000086 |    
+                      000087 |    ; Check if right move is wanted
+      0257 AD 00 A6   000088 |    LDA 0a600h
+      025A C9 04      000089 |    CMP #00000100b
+      025C D0 0D      000090 |    BNE endRight
+                      000091 |    
+                      000092 |    ; Check if LED is rightmost
+      025E AD D7 02   000093 |    LDA LED
+      0261 C9 01      000094 |    CMP #00000001b
+      0263 F0 06      000095 |    BEQ endRight
+                      000096 |    
+                      000097 |    ; Move LED
+      0265 4E D7 02   000098 |    LSR LED
+      0268 20 36 02   000099 |    JSR delay
+                      000100 |    
+      026B            000101 |endRight:
+      026B 68         000102 |    PLA
+      026C A8         000103 |    TAY
+      026D 68         000104 |    PLA
+      026E AA         000105 |    TAX
+      026F 68         000106 |    PLA
+                      000107 |    
+      0270 60         000108 |    rts
+                      000109 |    
+      0271            000110 |up:
+      0271 48         000111 |    PHA
+      0272 8A         000112 |    TXA
+      0273 48         000113 |    PHA
+      0274 98         000114 |    TYA
+      0275 48         000115 |    PHA
+                      000116 |    
+                      000117 |    ; Check if up move is wanted
+      0276 AD 00 A6   000118 |    LDA 0a600h
+      0279 C9 02      000119 |    CMP #00000010b
+      027B D0 05      000120 |    BNE endUp
+                      000121 |    
+                      000122 |    ; Change its layer
+      027D A9 00      000123 |    LDA #0d
+      027F 8D D8 02   000124 |    STA LEVEL
+                      000125 |
+      0282            000126 |endUp:
+      0282 68         000127 |    PLA
+      0283 A8         000128 |    TAY
+      0284 68         000129 |    PLA
+      0285 AA         000130 |    TAX
+      0286 68         000131 |    PLA
+                      000132 |    
+      0287 60         000133 |    rts
+                      000134 |    
+      0288            000135 |down:
+      0288 48         000136 |    PHA
+      0289 8A         000137 |    TXA
+      028A 48         000138 |    PHA
+      028B 98         000139 |    TYA
+      028C 48         000140 |    PHA
+                      000141 |    
+                      000142 |    ; Check if down move is wanted
+      028D AD 00 A6   000143 |    LDA 0a600h
+      0290 C9 01      000144 |    CMP #00000001b
+      0292 D0 05      000145 |    BNE endDown
+                      000146 |    
+                      000147 |    ; Change its layer
+      0294 A9 01      000148 |    LDA #1d
+      0296 8D D8 02   000149 |    STA LEVEL
+                      000150 |
+      0299            000151 |endDown:
+      0299 68         000152 |    PLA
+      029A A8         000153 |    TAY
+      029B 68         000154 |    PLA
+      029C AA         000155 |    TAX
+      029D 68         000156 |    PLA
+                      000157 |    
+      029E 60         000158 |    rts
+                      000159 |    
+      029F            000160 |display:
+      029F 48         000161 |    PHA
+      02A0 8A         000162 |    TXA
+      02A1 48         000163 |    PHA
+      02A2 98         000164 |    TYA
+      02A3 48         000165 |    PHA
+                      000166 |    
+                      000167 |    ; Check for top level
+      02A4 AD D8 02   000168 |    LDA LEVEL
+      02A7 C9 00      000169 |    CMP #0d
+      02A9 F0 0A      000170 |    BEQ displayTop
+                      000171 |    
+                      000172 |    ; Check for bottom level
+      02AB AD D8 02   000173 |    LDA LEVEL
+      02AE C9 01      000174 |    CMP #1d
+      02B0 F0 11      000175 |    BEQ displayBottom
+                      000176 |    
+      02B2 4C D1 02   000177 |    JMP displayEnd
+                      000178 |    
+      02B5            000179 |displayTop:
+      02B5 AD D7 02   000180 |    LDA LED
+      02B8 8D 00 A2   000181 |    STA 0a200h
+      02BB A9 00      000182 |    LDA #0d
+      02BD 8D 00 A4   000183 |    STA 0a400h
+      02C0 4C D1 02   000184 |    JMP displayEnd
+                      000185 |    
+      02C3            000186 |displayBottom:
+      02C3 AD D7 02   000187 |    LDA LED
+      02C6 8D 00 A4   000188 |    STA 0a400h
+      02C9 A9 00      000189 |    LDA #0d
+      02CB 8D 00 A2   000190 |    STA 0a200h
+      02CE 4C D1 02   000191 |    JMP displayEnd
+                      000192 |    
+      02D1            000193 |displayEnd:
+      02D1 68         000194 |    PLA
+      02D2 A8         000195 |    TAY
+      02D3 68         000196 |    PLA
+      02D4 AA         000197 |    TAX
+      02D5 68         000198 |    PLA
+                      000199 |    
+      02D6 60         000200 |    RTS
+                      000201 |    
+      02D7            000202 |LED:
+      02D7 00         000203 |    dbt 0d
+                      000204 |    
+      02D8            000205 |LEVEL:
+      02D8 00         000206 |    dbt 0d
+                      000207 |    
+                      000208 |    end
+      
+      *** Symbol Table ***
+      {DISPLAYEND=721, ENDUP=642, LED=727, LOOP=517, UP=625, INLOOP2=577, INLOOP1=575, OUTLOOP=573, DISPLAYTOP=693, ENDLEFT=560, RIGHT=594, DELAY=566, ENDRIGHT=619, LEFT=535, LEVEL=728, ENDDOWN=665, DOWN=648, DISPLAY=671, DISPLAYBOTTOM=707, =0}
+.   %/output
+
