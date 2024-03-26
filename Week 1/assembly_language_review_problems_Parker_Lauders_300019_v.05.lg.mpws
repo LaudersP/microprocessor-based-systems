@@ -723,12 +723,65 @@ Program 5 (15 points).
 Write a program that will sort the 100 integers starting at "numbers"
 into ascending order.
 
+-d 0235 0299
+
 %uasm65,title=""
 	org 0200h
 
 main:
-;Place your program code here.
-
+    LDX #0d
+    
+outerLoop:
+    LDY #0d
+    
+innerLoop:
+    ; Load the current element
+    LDA numbers,Y
+    
+    ; Store temporarily
+    STA temp
+    
+    ; Increment Y
+    INY
+    
+    ; Load the next element
+    LDA numbers,Y
+    
+    ; Compare it with the temp (previous element)
+    CMP temp
+    
+    ; If next element >= temp, no need to swap
+    BCS continue
+    
+    ; Swap needed
+    STA temp2
+    LDA temp
+    STA numbers,Y
+    LDA temp2
+    DEY
+    STA numbers,Y
+    INY
+    JMP nextStep
+    
+continue:
+    DEY
+    
+nextStep:
+    INY
+    CPY #100d
+    BNE innerLoop
+    
+    INX
+    CPX #99d
+    BNE outerLoop
+    
+    BRK
+    
+temp:
+    dbt 0d
+    
+temp2:
+    dbt 0d    
 
 numbers:
 	dbt 59d,61d,37d,128d,71d,150d,195d,130d,69d,84d
@@ -746,6 +799,189 @@ numbers:
 	end
 
 %/uasm65
+
+    %output,mpversion="346",preserve="false"
+      *** Executable Code ***
+      
+      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
+      	S00700005541534DC2
+      	S1170200A200A000B935028D3302C8B93502CD3302B0148DE7
+      	S11702143402AD3302993502AD340288993502C84C280288E9
+      	S1170228C8C064D0D7E8E063D0D00000003B3D25804796C3A3
+      	S117023C824554ABE363D6E98850FDF270DD9765754CE2AE7E
+      	S1170250CD544E8B59C3F34580D9D73964E3E2E9EEE5E4878F
+      	S11702648C62D3F578CEC62FBFEF1BEC0CF294620B26BDEE0C
+      	S1170278E18ED6D6154B11BEB27B7D7B0AA67B87DCC12EF88A
+      	S110028CDE3FCEC56590C9E90CF155B41DE7
+      	S9030000FC
+      %/s19
+       
+      *** List File ***
+      
+      0200            000001 |	org 0200h
+                      000002 |
+      0200            000003 |main:
+      0200 A2 00      000004 |    LDX #0d
+                      000005 |    
+      0202            000006 |outerLoop:
+      0202 A0 00      000007 |    LDY #0d
+                      000008 |    
+      0204            000009 |innerLoop:
+                      000010 |    ; Load the current element
+      0204 B9 35 02   000011 |    LDA numbers,Y
+                      000012 |    
+                      000013 |    ; Store temporarily
+      0207 8D 33 02   000014 |    STA temp
+                      000015 |    
+                      000016 |    ; Increment Y
+      020A C8         000017 |    INY
+                      000018 |    
+                      000019 |    ; Load the next element
+      020B B9 35 02   000020 |    LDA numbers,Y
+                      000021 |    
+                      000022 |    ; Compare it with the temp (previous element)
+      020E CD 33 02   000023 |    CMP temp
+                      000024 |    
+                      000025 |    ; If next element >= temp,no need to swap
+      0211 B0 14      000026 |    BCS continue
+                      000027 |    
+                      000028 |    ; Swap needed
+      0213 8D 34 02   000029 |    STA temp2
+      0216 AD 33 02   000030 |    LDA temp
+      0219 99 35 02   000031 |    STA numbers,Y
+      021C AD 34 02   000032 |    LDA temp2
+      021F 88         000033 |    DEY
+      0220 99 35 02   000034 |    STA numbers,Y
+      0223 C8         000035 |    INY
+      0224 4C 28 02   000036 |    JMP nextStep
+                      000037 |    
+      0227            000038 |continue:
+      0227 88         000039 |    DEY
+                      000040 |    
+      0228            000041 |nextStep:
+      0228 C8         000042 |    INY
+      0229 C0 64      000043 |    CPY #100d
+      022B D0 D7      000044 |    BNE innerLoop
+                      000045 |    
+      022D E8         000046 |    INX
+      022E E0 63      000047 |    CPX #99d
+      0230 D0 D0      000048 |    BNE outerLoop
+                      000049 |    
+      0232 00         000050 |    BRK
+                      000051 |    
+      0233            000052 |temp:
+      0233 00         000053 |    dbt 0d
+                      000054 |    
+      0234            000055 |temp2:
+      0234 00         000056 |    dbt 0d    
+                      000057 |
+      0235            000058 |numbers:
+      0235 3B         000059 |	dbt 59d,61d,37d,128d,71d,150d,195d,130d,69d,84d
+      0236 3D               
+      0237 25               
+      0238 80               
+      0239 47               
+      023A 96               
+      023B C3               
+      023C 82               
+      023D 45               
+      023E 54               
+      023F AB         000060 |	dbt 171d,227d,99d,214d,233d,136d,80d,253d,242d
+      0240 E3               
+      0241 63               
+      0242 D6               
+      0243 E9               
+      0244 88               
+      0245 50               
+      0246 FD               
+      0247 F2               
+      0248 70         000061 |	dbt 112d,221d,151d,101d,117d,76d,226d,174d,205d
+      0249 DD               
+      024A 97               
+      024B 65               
+      024C 75               
+      024D 4C               
+      024E E2               
+      024F AE               
+      0250 CD               
+      0251 54         000062 |	dbt 84d,78d,139d,89d,195d,243d,69d,128d,217d,215d
+      0252 4E               
+      0253 8B               
+      0254 59               
+      0255 C3               
+      0256 F3               
+      0257 45               
+      0258 80               
+      0259 D9               
+      025A D7               
+      025B 39         000063 |	dbt 57d,100d,227d,226d,233d,238d,229d,228d,135d
+      025C 64               
+      025D E3               
+      025E E2               
+      025F E9               
+      0260 EE               
+      0261 E5               
+      0262 E4               
+      0263 87               
+      0264 8C         000064 |	dbt 140d,98d,211d,245d,120d,206d,198d,47d,191d
+      0265 62               
+      0266 D3               
+      0267 F5               
+      0268 78               
+      0269 CE               
+      026A C6               
+      026B 2F               
+      026C BF               
+      026D EF         000065 |	dbt 239d,27d,236d,12d,242d,148d,98d,11d,38d,189d
+      026E 1B               
+      026F EC               
+      0270 0C               
+      0271 F2               
+      0272 94               
+      0273 62               
+      0274 0B               
+      0275 26               
+      0276 BD               
+      0277 EE         000066 |	dbt 238d,225d,142d,214d,214d,21d,75d,17d,190d
+      0278 E1               
+      0279 8E               
+      027A D6               
+      027B D6               
+      027C 15               
+      027D 4B               
+      027E 11               
+      027F BE               
+      0280 B2         000067 |	dbt 178d,123d,125d,123d,10d,166d,123d,135d,220d
+      0281 7B               
+      0282 7D               
+      0283 7B               
+      0284 0A               
+      0285 A6               
+      0286 7B               
+      0287 87               
+      0288 DC               
+      0289 C1         000068 |	dbt 193d,46d,248d,222d,63d,206d,197d,101d,144d
+      028A 2E               
+      028B F8               
+      028C DE               
+      028D 3F               
+      028E CE               
+      028F C5               
+      0290 65               
+      0291 90               
+      0292 C9         000069 |	dbt 201d,233d,12d,241d,85d,180d,29d
+      0293 E9               
+      0294 0C               
+      0295 F1               
+      0296 55               
+      0297 B4               
+      0298 1D               
+                      000070 |
+                      000071 |	end
+      
+      *** Symbol Table ***
+      {MAIN=512, NUMBERS=565, NEXTSTEP=552, INNERLOOP=516, TEMP2=564, TEMP=563, CONTINUE=551, OUTERLOOP=514, =0}
+.   %/output
 
 
 
