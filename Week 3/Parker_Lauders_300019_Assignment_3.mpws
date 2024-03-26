@@ -1167,1002 +1167,290 @@ first player with 5 points wins. Keep track of the
 score and notify the users when either the left 
 or the right player has won.
 
-%uasm65,title=""
-    org 0200h
-    
-    ; Load A-Reg with LED pattern
-    LDA #00000001b
-    STA 0a200h  
-    
-    LDX #0d
+%uasm65,title="PingPong"
+PrntMess: equ E00Ch ;Print a message to the user.
 
-main:
-    ; Shift ball left
-    JSR ShiftLeft
+    ORG 0200h
     
-    ; Get switch status
-    LDA 0a600h
-    
-    ; Act on switch
-    CMP #2d
-    BNE PointRight
- 
-main2:
-    ; Shift ball right
-    JSR ShiftRight
-    
-    ; Get switch status
-    LDA 0a600h
-    
-    ; Act on switch
-    CMP #1d
-    BNE PointLeft
-    
-    jmp main
-    
-GameOver:
-    end
-    
-;===============
-;= SUBROUTINES =
-;===============
-
-; === Add point to left player ===
-PointLeft:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-	INC PlayerLeftScore
-	
-	LDA PlayerLeftScore
-	CMP #5d
-	BEQ GameOver
-	
-	LDA #10000000b
-	STA 0a200h
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	jmp main2
-	
-; === Add point to right player ===
-PointRight:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-	INC PlayerRightScore
-	
-	LDA PlayerRightScore
-	CMP #5d
-	BEQ GameOver
-	
-	LDA #00000001b
-	STA 0a200h
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	jmp main
-	
-; === Shift Left ===
-ShiftLeft:
-    ;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-; Main code
-    LDX #0d
-    
-ShiftLeftLoop:
-    JSR ShiftDelay
-    
-    ASL 0a200h
-    INX
-    
-    CPX #7d
-    BNE ShiftLeftLoop
-    
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	rts
-	
-; === Shift Right ===
-ShiftRight:
-    ;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-; Main code
-    LDX #0d
-    
-ShiftRightLoop:
-    JSR ShiftDelay
-    
-    LSR 0a200h
-    INX
-    
-    CPX #7d
-    BNE ShiftRightLoop
-    
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	rts
-
-; Delay Subroutine
-ShiftDelay:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-;Change the number that is being loaded into the
-; 'A' register in order to change the delay time.
-	lda #02Fh
-	
-OutLoop:
-	ldx #030h
-
-InLoop1:
-	ldy #0ffh
-
-InLoop2:
-	dey
-	beq InLoop2
-
-	dex
-	bne InLoop1
-
-	sec
-	sbc #1d
-	bne OutLoop
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	rts 
-	
-; =============
-; = Variables =
-; =============
-PlayerLeftScore:
-    dbt 0d
-    
-PlayerRightScore:
-    dbt 0d
-    
-    end
-%/uasm65
-
-    %output,mpversion="346",preserve="false"
-      *** Executable Code ***
-      
-      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
-      	S00700005541534DC2
-      	S1170200A9018D00A2A200205602AD00A6C902D029206E024C
-      	S1170214AD00A6C901D0034C0702488A489848EEA202ADA2B2
-      	S117022802C905F0F1A9808D00A268A868AA684C1102488AFA
-      	S117023C489848EEA302ADA302C905F0D5A9018D00A268A821
-      	S117025068AA684C0702488A489848A2002086020E00A2E8EB
-      	S1170264E007D0F568A868AA6860488A489848A200208602A8
-      	S11702784E00A2E8E007D0F568A868AA6860488A489848A95D
-      	S117028C2FA230A0FF88F0FDCAD0F838E901D0F168A868AAAE
-      	S10702A0686000008E
-      	S9030000FC
-      %/s19
-       
-      *** List File ***
-      
-      0200            000001 |    org 0200h
-                      000002 |    
-                      000003 |    ; Load A-Reg with LED pattern
-      0200 A9 01      000004 |    LDA #00000001b
-      0202 8D 00 A2   000005 |    STA 0a200h  
-                      000006 |    
-      0205 A2 00      000007 |    LDX #0d
-                      000008 |
-      0207            000009 |main:
-                      000010 |    ; Shift ball left
-      0207 20 56 02   000011 |    JSR ShiftLeft
-                      000012 |    
-                      000013 |    ; Get switch status
-      020A AD 00 A6   000014 |    LDA 0a600h
-                      000015 |    
-                      000016 |    ; Act on switch
-      020D C9 02      000017 |    CMP #2d
-      020F D0 29      000018 |    BNE PointRight
-                      000019 | 
-      0211            000020 |main2:
-                      000021 |    ; Shift ball right
-      0211 20 6E 02   000022 |    JSR ShiftRight
-                      000023 |    
-                      000024 |    ; Get switch status
-      0214 AD 00 A6   000025 |    LDA 0a600h
-                      000026 |    
-                      000027 |    ; Act on switch
-      0217 C9 01      000028 |    CMP #1d
-      0219 D0 03      000029 |    BNE PointLeft
-                      000030 |    
-      021B 4C 07 02   000031 |    jmp main
-                      000032 |    
-      021E            000033 |GameOver:
-                      000034 |    end
-                      000035 |    
-                      000036 |;===============
-                      000037 |;= SUBROUTINES =
-                      000038 |;===============
-                      000039 |
-                      000040 |; === Add point to left player ===
-      021E            000041 |PointLeft:
-                      000042 |;Save registers on the stack.
-      021E 48         000043 |	pha
-      021F 8A         000044 |	txa
-      0220 48         000045 |	pha
-      0221 98         000046 |	tya
-      0222 48         000047 |	pha
-                      000048 |	
-      0223 EE A2 02   000049 |	INC PlayerLeftScore
-                      000050 |	
-      0226 AD A2 02   000051 |	LDA PlayerLeftScore
-      0229 C9 05      000052 |	CMP #5d
-      022B F0 F1      000053 |	BEQ GameOver
-                      000054 |	
-      022D A9 80      000055 |	LDA #10000000b
-      022F 8D 00 A2   000056 |	STA 0a200h
-                      000057 |	
-                      000058 |;Restore registers from the stack.
-      0232 68         000059 |	pla
-      0233 A8         000060 |	tay
-      0234 68         000061 |	pla
-      0235 AA         000062 |	tax
-      0236 68         000063 |	pla
-                      000064 |
-      0237 4C 11 02   000065 |	jmp main2
-                      000066 |	
-                      000067 |; === Add point to right player ===
-      023A            000068 |PointRight:
-                      000069 |;Save registers on the stack.
-      023A 48         000070 |	pha
-      023B 8A         000071 |	txa
-      023C 48         000072 |	pha
-      023D 98         000073 |	tya
-      023E 48         000074 |	pha
-                      000075 |	
-      023F EE A3 02   000076 |	INC PlayerRightScore
-                      000077 |	
-      0242 AD A3 02   000078 |	LDA PlayerRightScore
-      0245 C9 05      000079 |	CMP #5d
-      0247 F0 D5      000080 |	BEQ GameOver
-                      000081 |	
-      0249 A9 01      000082 |	LDA #00000001b
-      024B 8D 00 A2   000083 |	STA 0a200h
-                      000084 |	
-                      000085 |;Restore registers from the stack.
-      024E 68         000086 |	pla
-      024F A8         000087 |	tay
-      0250 68         000088 |	pla
-      0251 AA         000089 |	tax
-      0252 68         000090 |	pla
-                      000091 |
-      0253 4C 07 02   000092 |	jmp main
-                      000093 |	
-                      000094 |; === Shift Left ===
-      0256            000095 |ShiftLeft:
-                      000096 |    ;Save registers on the stack.
-      0256 48         000097 |	pha
-      0257 8A         000098 |	txa
-      0258 48         000099 |	pha
-      0259 98         000100 |	tya
-      025A 48         000101 |	pha
-                      000102 |	
-                      000103 |; Main code
-      025B A2 00      000104 |    LDX #0d
-                      000105 |    
-      025D            000106 |ShiftLeftLoop:
-      025D 20 86 02   000107 |    JSR ShiftDelay
-                      000108 |    
-      0260 0E 00 A2   000109 |    ASL 0a200h
-      0263 E8         000110 |    INX
-                      000111 |    
-      0264 E0 07      000112 |    CPX #7d
-      0266 D0 F5      000113 |    BNE ShiftLeftLoop
-                      000114 |    
-                      000115 |;Restore registers from the stack.
-      0268 68         000116 |	pla
-      0269 A8         000117 |	tay
-      026A 68         000118 |	pla
-      026B AA         000119 |	tax
-      026C 68         000120 |	pla
-                      000121 |
-      026D 60         000122 |	rts
-                      000123 |	
-                      000124 |; === Shift Right ===
-      026E            000125 |ShiftRight:
-                      000126 |    ;Save registers on the stack.
-      026E 48         000127 |	pha
-      026F 8A         000128 |	txa
-      0270 48         000129 |	pha
-      0271 98         000130 |	tya
-      0272 48         000131 |	pha
-                      000132 |	
-                      000133 |; Main code
-      0273 A2 00      000134 |    LDX #0d
-                      000135 |    
-      0275            000136 |ShiftRightLoop:
-      0275 20 86 02   000137 |    JSR ShiftDelay
-                      000138 |    
-      0278 4E 00 A2   000139 |    LSR 0a200h
-      027B E8         000140 |    INX
-                      000141 |    
-      027C E0 07      000142 |    CPX #7d
-      027E D0 F5      000143 |    BNE ShiftRightLoop
-                      000144 |    
-                      000145 |;Restore registers from the stack.
-      0280 68         000146 |	pla
-      0281 A8         000147 |	tay
-      0282 68         000148 |	pla
-      0283 AA         000149 |	tax
-      0284 68         000150 |	pla
-                      000151 |
-      0285 60         000152 |	rts
-                      000153 |
-                      000154 |; Delay Subroutine
-      0286            000155 |ShiftDelay:
-                      000156 |;Save registers on the stack.
-      0286 48         000157 |	pha
-      0287 8A         000158 |	txa
-      0288 48         000159 |	pha
-      0289 98         000160 |	tya
-      028A 48         000161 |	pha
-                      000162 |	
-                      000163 |;Change the number that is being loaded into the
-                      000164 |; 'A' register in order to change the delay time.
-      028B A9 2F      000165 |	lda #02Fh
-                      000166 |	
-      028D            000167 |OutLoop:
-      028D A2 30      000168 |	ldx #030h
-                      000169 |
-      028F            000170 |InLoop1:
-      028F A0 FF      000171 |	ldy #0ffh
-                      000172 |
-      0291            000173 |InLoop2:
-      0291 88         000174 |	dey
-      0292 F0 FD      000175 |	beq InLoop2
-                      000176 |
-      0294 CA         000177 |	dex
-      0295 D0 F8      000178 |	bne InLoop1
-                      000179 |
-      0297 38         000180 |	sec
-      0298 E9 01      000181 |	sbc #1d
-      029A D0 F1      000182 |	bne OutLoop
-                      000183 |	
-                      000184 |;Restore registers from the stack.
-      029C 68         000185 |	pla
-      029D A8         000186 |	tay
-      029E 68         000187 |	pla
-      029F AA         000188 |	tax
-      02A0 68         000189 |	pla
-                      000190 |
-      02A1 60         000191 |	rts 
-                      000192 |	
-                      000193 |; =============
-                      000194 |; = Variables =
-                      000195 |; =============
-      02A2            000196 |PlayerLeftScore:
-      02A2 00         000197 |    dbt 0d
-                      000198 |    
-      02A3            000199 |PlayerRightScore:
-      02A3 00         000200 |    dbt 0d
-                      000201 |    
-                      000202 |    end
-      
-      *** Symbol Table ***
-      {SHIFTDELAY=646, MAIN=519, POINTRIGHT=570, INLOOP2=657, SHIFTRIGHT=622, INLOOP1=655, SHIFTRIGHTLOOP=629, GAMEOVER=542, PLAYERRIGHTSCORE=675, SHIFTLEFTLOOP=605, PLAYERLEFTSCORE=674, SHIFTLEFT=598, OUTLOOP=653, MAIN2=529, POINTLEFT=542, =0}
-.   %/output
-
-
-%/group
-
-%group,title="Ping Pong"
-
-%uasm65,title="Ping Pong"
-
-    org 200h
-    
-    ; Load starting position for ball
+    ; Initialize Ball
     LDA #00000001b
     STA Ball
     
-    ; Display ball
-    LDA Ball
-    STA 0a200h
+    ; Initialize Speed
+    LDA #0FFh
+    STA Speed
     
-; Main game loop
+    ; Initialize Scores
+    LDA #0d
+    STA ScoreRight
+    STA ScoreLeft
+    
+    ; X & Y reg
+    LDX #0d
+    LDY #0d
+    
 GameLoop:
-    ; Ball left
-    JSR ShiftLeft
-    
-    ; Check if the left paddle is down
-    LDA 0ac00h
-    CMP #00000010b
-    BNE scoredRight
-    
-    ; Set ball right most position
-    LDA #10000000b
-    STA Ball
-    
-    ; Ball right
-    JSR ShiftRight
-    
-    ; Jump to end
-    JMP Stop
-    
-    
-; ===============
-; = Subroutines =
-; ===============   
-   
-; ### Ball shift right ###
-ShiftRight:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-; Shift logic loop
-rightShift:
-    JSR ShiftDelay
-    
     LDA Ball
-    LSR Ball
-    STA 0a200h
+    STA 0A200h
     
-    CMP #00000001b
-    BNE rightShift
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
+    JSR shiftLeft
     
-    rts
+    LDA Speed
+    SBC #6d
+    STA Speed
     
-
-; ### Right winner message ###
-RightWins:
-    LDA #11111111b
-    STA 0a400h
-    
-    JMP Stop
-
-; ### Increase right score
-scoredRight:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-; Increase logic
-    INC RightScore
-    LDA RightScore
-    STA 0a400h
-    
-    CMP #5d
-    BEQ RightWins
-    
-    LDA #00000001b
-    STA Ball
+    JSR shiftRight
     
     JMP GameLoop
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
     
-    rts
-	
+; ###################
+; #   Subroutines   #  
+; ################### 
 
-; ### Ball shift left ###
-ShiftLeft:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-; Ball shift logic
-leftShift:
-    JSR ShiftDelay
+shiftLeft:
+    ; Save register
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+; Shift logic 
+leftShiftLoop:
+    ; Check if ball is already left; skip shift logic
+    LDA Ball
+    CMP #10000000b
+    BEQ cancelLeftShift
+    
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    
+    ASL Ball
+    
+    ; Check if paddle is down; cheating
+    LDA 0A600h
+    CMP #00000010b
+    BEQ rightScores
     
     LDA Ball
-    ASL Ball
-    STA 0a200h
+    STA 0A200h
     
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    
+    ; Check if ball is already left; check for hitting
+    LDA Ball
     CMP #10000000b
-    BNE leftShift
+    BNE leftShiftLoop
     
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
+    ; Check if paddle is down; hitting
+    LDA 0A600h
+    CMP #000000010b
+    BNE rightScores
     
-    rts
-
+cancelLeftShift:
+    ; Restore registers
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    RTS
+ 
+rightScores:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
     
-; ### Delay Subroutine ###
-ShiftDelay:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-;Change the number that is being loaded into the
-; 'A' register in order to change the delay time.
-	lda #02Fh
-	
-OutLoop:
-	ldx #030h
-
-InLoop1:
-	ldy #0ffh
-
-InLoop2:
-	dey
-	beq InLoop2
-
-	dex
-	bne InLoop1
-
-	sec
-	sbc #1d
-	bne OutLoop
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	rts 
-	
-; =============
-; = Variables =
-; =============
-Ball:
-    dbt 0d
+    ldx #RightScoredMessage<
+    ldy #RightScoredMessage>
+    jsr PrntMess
     
-RightScore:
-    dbt 0d
+    INC scoreRight
+    LDA scoreRight
+    CMP #5d
+    BEQ rightWins
     
-LeftScore:
-    dbt 0d
-
-Stop:
-    end
-
-%/uasm65
-
-    %output,mpversion="346",preserve="false"
-      *** Executable Code ***
-      
-      %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
-      	S00700005541534DC2
-      	S1170200A9018D9A02AD9A028D00A2206302AD00ACC902D022
-      	S11702142EA9808D9A022020024C9D02488A489848207E028B
-      	S1170228AD9A024E9A028D00A2C901D0F068A868AA6860A93F
-      	S117023CFF8D00A44C9D02488A489848EE9B02AD9B028D0033
-      	S1170250A4C905F0E6A9018D9A024C0B0268A868AA686048F0
-      	S11702648A489848207E02AD9A020E9A028D00A2C980D0F005
-      	S117027868A868AA6860488A489848A92FA230A0FF88F0FDCC
-      	S114028CCAD0F838E901D0F168A868AA6860000000FE
-      	S9030000FC
-      %/s19
-       
-      *** List File ***
-      
-                      000001 |
-      0200            000002 |    org 200h
-                      000003 |    
-                      000004 |    ; Load starting position for ball
-      0200 A9 01      000005 |    LDA #00000001b
-      0202 8D 9A 02   000006 |    STA Ball
-                      000007 |    
-                      000008 |    ; Display ball
-      0205 AD 9A 02   000009 |    LDA Ball
-      0208 8D 00 A2   000010 |    STA 0a200h
-                      000011 |    
-                      000012 |; Main game loop
-      020B            000013 |GameLoop:
-                      000014 |    ; Ball left
-      020B 20 63 02   000015 |    JSR ShiftLeft
-                      000016 |    
-                      000017 |    ; Check if the left paddle is down
-      020E AD 00 AC   000018 |    LDA 0ac00h
-      0211 C9 02      000019 |    CMP #00000010b
-      0213 D0 2E      000020 |    BNE scoredRight
-                      000021 |    
-                      000022 |    ; Set ball right most position
-      0215 A9 80      000023 |    LDA #10000000b
-      0217 8D 9A 02   000024 |    STA Ball
-                      000025 |    
-                      000026 |    ; Ball right
-      021A 20 20 02   000027 |    JSR ShiftRight
-                      000028 |    
-                      000029 |    ; Jump to end
-      021D 4C 9D 02   000030 |    JMP Stop
-                      000031 |    
-                      000032 |    
-                      000033 |; ===============
-                      000034 |; = Subroutines =
-                      000035 |; ===============   
-                      000036 |   
-                      000037 |; ### Ball shift right ###
-      0220            000038 |ShiftRight:
-                      000039 |;Save registers on the stack.
-      0220 48         000040 |	pha
-      0221 8A         000041 |	txa
-      0222 48         000042 |	pha
-      0223 98         000043 |	tya
-      0224 48         000044 |	pha
-                      000045 |	
-                      000046 |; Shift logic loop
-      0225            000047 |rightShift:
-      0225 20 7E 02   000048 |    JSR ShiftDelay
-                      000049 |    
-      0228 AD 9A 02   000050 |    LDA Ball
-      022B 4E 9A 02   000051 |    LSR Ball
-      022E 8D 00 A2   000052 |    STA 0a200h
-                      000053 |    
-      0231 C9 01      000054 |    CMP #00000001b
-      0233 D0 F0      000055 |    BNE rightShift
-                      000056 |	
-                      000057 |;Restore registers from the stack.
-      0235 68         000058 |	pla
-      0236 A8         000059 |	tay
-      0237 68         000060 |	pla
-      0238 AA         000061 |	tax
-      0239 68         000062 |	pla
-                      000063 |    
-      023A 60         000064 |    rts
-                      000065 |    
-                      000066 |
-                      000067 |; ### Right winner message ###
-      023B            000068 |RightWins:
-      023B A9 FF      000069 |    LDA #11111111b
-      023D 8D 00 A4   000070 |    STA 0a400h
-                      000071 |    
-      0240 4C 9D 02   000072 |    JMP Stop
-                      000073 |
-                      000074 |; ### Increase right score
-      0243            000075 |scoredRight:
-                      000076 |;Save registers on the stack.
-      0243 48         000077 |	pha
-      0244 8A         000078 |	txa
-      0245 48         000079 |	pha
-      0246 98         000080 |	tya
-      0247 48         000081 |	pha
-                      000082 |	
-                      000083 |; Increase logic
-      0248 EE 9B 02   000084 |    INC RightScore
-      024B AD 9B 02   000085 |    LDA RightScore
-      024E 8D 00 A4   000086 |    STA 0a400h
-                      000087 |    
-      0251 C9 05      000088 |    CMP #5d
-      0253 F0 E6      000089 |    BEQ RightWins
-                      000090 |    
-      0255 A9 01      000091 |    LDA #00000001b
-      0257 8D 9A 02   000092 |    STA Ball
-                      000093 |    
-      025A 4C 0B 02   000094 |    JMP GameLoop
-                      000095 |	
-                      000096 |;Restore registers from the stack.
-      025D 68         000097 |	pla
-      025E A8         000098 |	tay
-      025F 68         000099 |	pla
-      0260 AA         000100 |	tax
-      0261 68         000101 |	pla
-                      000102 |    
-      0262 60         000103 |    rts
-                      000104 |	
-                      000105 |
-                      000106 |; ### Ball shift left ###
-      0263            000107 |ShiftLeft:
-                      000108 |;Save registers on the stack.
-      0263 48         000109 |	pha
-      0264 8A         000110 |	txa
-      0265 48         000111 |	pha
-      0266 98         000112 |	tya
-      0267 48         000113 |	pha
-                      000114 |	
-                      000115 |; Ball shift logic
-      0268            000116 |leftShift:
-      0268 20 7E 02   000117 |    JSR ShiftDelay
-                      000118 |    
-      026B AD 9A 02   000119 |    LDA Ball
-      026E 0E 9A 02   000120 |    ASL Ball
-      0271 8D 00 A2   000121 |    STA 0a200h
-                      000122 |    
-      0274 C9 80      000123 |    CMP #10000000b
-      0276 D0 F0      000124 |    BNE leftShift
-                      000125 |    
-                      000126 |;Restore registers from the stack.
-      0278 68         000127 |	pla
-      0279 A8         000128 |	tay
-      027A 68         000129 |	pla
-      027B AA         000130 |	tax
-      027C 68         000131 |	pla
-                      000132 |    
-      027D 60         000133 |    rts
-                      000134 |
-                      000135 |    
-                      000136 |; ### Delay Subroutine ###
-      027E            000137 |ShiftDelay:
-                      000138 |;Save registers on the stack.
-      027E 48         000139 |	pha
-      027F 8A         000140 |	txa
-      0280 48         000141 |	pha
-      0281 98         000142 |	tya
-      0282 48         000143 |	pha
-                      000144 |	
-                      000145 |;Change the number that is being loaded into the
-                      000146 |; 'A' register in order to change the delay time.
-      0283 A9 2F      000147 |	lda #02Fh
-                      000148 |	
-      0285            000149 |OutLoop:
-      0285 A2 30      000150 |	ldx #030h
-                      000151 |
-      0287            000152 |InLoop1:
-      0287 A0 FF      000153 |	ldy #0ffh
-                      000154 |
-      0289            000155 |InLoop2:
-      0289 88         000156 |	dey
-      028A F0 FD      000157 |	beq InLoop2
-                      000158 |
-      028C CA         000159 |	dex
-      028D D0 F8      000160 |	bne InLoop1
-                      000161 |
-      028F 38         000162 |	sec
-      0290 E9 01      000163 |	sbc #1d
-      0292 D0 F1      000164 |	bne OutLoop
-                      000165 |	
-                      000166 |;Restore registers from the stack.
-      0294 68         000167 |	pla
-      0295 A8         000168 |	tay
-      0296 68         000169 |	pla
-      0297 AA         000170 |	tax
-      0298 68         000171 |	pla
-                      000172 |
-      0299 60         000173 |	rts 
-                      000174 |	
-                      000175 |; =============
-                      000176 |; = Variables =
-                      000177 |; =============
-      029A            000178 |Ball:
-      029A 00         000179 |    dbt 0d
-                      000180 |    
-      029B            000181 |RightScore:
-      029B 00         000182 |    dbt 0d
-                      000183 |    
-      029C            000184 |LeftScore:
-      029C 00         000185 |    dbt 0d
-                      000186 |
-      029D            000187 |Stop:
-                      000188 |    end
-      
-      *** Symbol Table ***
-      {RIGHTWINS=571, SHIFTDELAY=638, BALL=666, LEFTSHIFT=616, RIGHTSHIFT=549, LEFTSCORE=668, RIGHTSCORE=667, GAMELOOP=523, INLOOP2=649, SHIFTRIGHT=544, INLOOP1=647, STOP=669, SHIFTLEFT=611, OUTLOOP=645, SCOREDRIGHT=579, =0}
-.   %/output
-
-
-
-%/group
-
-%group,title="PingPongV2"
-
-%uasm65,title="PingPongV2"
-    org 0200h
+    STA scoreRight
     
-    ; Variable setup
     LDA #00000001b
     STA Ball
-    STA RIGHT_MOST_POSITION
+    STA 0a200h
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    
+    LDA #0FFh
+    STA Speed
+    
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    JMP GameLoop
+    
+rightWins:
+    ldx #RightWinnerMessage<
+    ldy #RightWinnerMessage>
+    jsr PrntMess
+    END    
+    
+delay:
+    ; Save reg
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    LDA Speed
+    
+OutLoop:
+    LDX #0FFh
+    
+InLoop1:
+    LDY #0FFh
+    
+InLoop2:
+    DEY
+    BEQ InLoop2
+    
+    DEX
+    BNE InLoop1
+    
+    SEC
+    SBC #1d
+    BNE OutLoop
+    
+; Restore registers
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    RTS
+    
+
+shiftRight:
+    ; Save register
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+; Shift logic 
+rightShiftLoop:
+    ; Check if ball is already right; skip shift logic
+    LDA Ball
+    CMP #00000001b
+    BEQ cancelRightShift
+    
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    
+    LSR Ball
+    
+    ; Check if paddle is down; cheating
+    LDA 0A600h
+    CMP #00000001b
+    BEQ leftScores
+    
+    LDA Ball
+    STA 0A200h
+    
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    
+    ; Check if ball is already right; check for hitting
+    LDA Ball
+    CMP #00000001b
+    BNE rightShiftLoop
+    
+    ; Check if paddle is down; hitting
+    LDA 0A600h
+    CMP #000000001b
+    BNE leftScores
+    
+cancelRightShift:
+    ; Restore registers
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    RTS
+ 
+leftScores:
+    PHA
+    TXA
+    PHA
+    TYA
+    PHA
+    
+    ldx #LeftScoredMessage<
+    ldy #LeftScoredMessage>
+    jsr PrntMess
+    
+    INC scoreLeft
+    LDA scoreLeft
+    CMP #5d
+    BEQ leftWins
+    
+    STA scoreLeft
     
     LDA #10000000b
-    STA LEFT_MOST_POSITION
-    
-; Loop for game logic loop    
-GameLoop:
-    LDA Ball
-    STA 0a200h
-    
-    ; Delay
-    JSR ShiftDelay
-    
-    ; Shift left
-    JSR ShiftLeft
-    
-    ; Check if left switch is down
-    LDA 0ac00h
-    CMP #00000010b
-    BEQ RightScored
-    
-    ; Check if ball is in left position
-    LDA Ball
-    CMP LEFT_MOST_POSITION
-    BNE GameLoop
-    
-    ; End program
-    JMP Ending
-    
-; #####################
-; #    Subroutines    #
-; #####################
-
-; ### Right wins
-WinnerRight:
-    LDA #00001111b
-    STA 0a400h
-    
-; ### Increase right score ###
-RightScored:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-; Score increase logic
-    INC ScoreRight
-    LDA ScoreRight
-    STA 0a400h
-    
-    LDA ScoreRight
-    CMP #5d
-    BEQ WinnerRight
-    
-    LDA RIGHT_MOST_POSITION
     STA Ball
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	rts
-	
-
-; ### Left ball shift ###
-ShiftLeft:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-; Shift logic
-    ASL Ball
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	rts
-	
-
-; ### Delay Subroutine ###
-ShiftDelay:
-;Save registers on the stack.
-	pha
-	txa
-	pha
-	tya
-	pha
-	
-;Change the number that is being loaded into the
-; 'A' register in order to change the delay time.
-	lda #02Fh
-	
-OutLoop:
-	ldx #030h
-
-InLoop1:
-	ldy #0ffh
-
-InLoop2:
-	dey
-	beq InLoop2
-
-	dex
-	bne InLoop1
-
-	sec
-	sbc #1d
-	bne OutLoop
-	
-;Restore registers from the stack.
-	pla
-	tay
-	pla
-	tax
-	pla
-
-	rts 
+    STA 0a200h
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
+    JSR delay
     
+    LDA #0FFh
+    STA Speed
     
-; ###################
-; #    Variables    #
-; ###################
+    PLA
+    TAY
+    PLA
+    TAX
+    PLA
+    JMP GameLoop
+    
+leftWins:
+    ldx #LeftWinnerMessage<
+    ldy #LeftWinnerMessage>
+    jsr PrntMess
+    END
+  
+; #################
+; #   Variables   #  
+; ################# 
 
-; Ball location
 Ball:
     dbt 0d
-    
-; Left most position allowed
-LEFT_MOST_POSITION:
-    dbt 0d
-    
-; Right most position allowed
-RIGHT_MOST_POSITION:
+
+Speed:
     dbt 0d
     
 ScoreRight:
@@ -2170,10 +1458,28 @@ ScoreRight:
     
 ScoreLeft:
     dbt 0d
-
-Ending:
-    end
-
+    END
+    
+LeftScoredMessage:
+    dbt 0ah,0dh
+    dbt "Left Scored!"
+    dbt 0d
+    
+RightScoredMessage:
+    dbt 0ah,0dh
+    dbt "Right Scored!"
+    dbt 0d
+    
+LeftWinnerMessage:
+    dbt 0ah,0dh
+    dbt "WINNER: LEFT!"
+    dbt 0d
+    
+RightWinnerMessage:
+    dbt 0ah,0dh
+    dbt "WINNER: RIGHT!"
+    dbt 0d
+    
 %/uasm65
 
     %output,mpversion="346",preserve="false"
@@ -2181,184 +1487,371 @@ Ending:
       
       %s19,description="Execute this fold to send program to U6502 monitor.",preserve="false"
       	S00700005541534DC2
-      	S1170200A9018D7B028D7D02A9808D7C02AD7B028D00A22079
-      	S11702145F02205102AD00ACC902F010AD7B02CD7C02D0E5B0
-      	S11702284C8002A90F8D00A4488A489848EE7E02AD7E028DE5
-      	S117023C00A4AD7E02C905F0E6AD7D028D7B0268A868AA6875
-      	S117025060488A4898480E7B0268A868AA6860488A489848CD
-      	S1170264A92FA230A0FF88F0FDCAD0F838E901D0F168A868D7
-      	S10B0278AA6860000000000008
+      	S1170200A9018D7403A9FF8D7503A9008D76038D7703A20033
+      	S1170214A000AD74038D00A2202D02AD7503E9068D75032057
+      	S1170228DF024C1602488A489848AD7403C980F03620C20208
+      	S117023C20C20220C20220C2020E7403AD00A6C902F026AD98
+      	S117025074038D00A220C20220C20220C20220C202AD74033C
+      	S1170264C980D0CAAD00A6C902D00668A868AA6860488A48A7
+      	S11702789848A287A003200CE0EE7603AD7603C905F0308DAE
+      	S117028C7603A9018D74038D00A220C20220C20220C2022038
+      	S11702A0C20220C20220C20220C20220C202A9FF8D750368DD
+      	S11702B4A868AA684C1602A2A7A003200CE0488A489848AD0D
+      	S11702C87503A2FFA0FF88F0FDCAD0F838E901D0F168A86804
+      	S11702DCAA6860488A489848AD7403C901F03620C20220C2C4
+      	S11702F00220C20220C2024E7403AD00A6C901F026AD740310
+      	S11703048D00A220C20220C20220C20220C202AD7403C90134
+      	S1170318D0CAAD00A6C901D00668A868AA6860488A4898485C
+      	S117032CA278A003200CE0EE7703AD7703C905F0308D77036C
+      	S1170340A9808D74038D00A220C20220C20220C20220C202B9
+      	S117035420C20220C20220C20220C202A9FF8D750368A868DC
+      	S1170368AA684C1602A297A003200CE0000000000A0D4C6557
+      	S117037C66742053636F72656421000A0D5269676874205366
+      	S1170390636F72656421000A0D57494E4E45523A204C45460C
+      	S11703A45421000A0D57494E4E45523A2052494748542100E9
+      	S10303B841
       	S9030000FC
       %/s19
-       
+      
       *** List File ***
       
-      0200            000001 |    org 0200h
-                      000002 |    
-                      000003 |    ; Variable setup
-      0200 A9 01      000004 |    LDA #00000001b
-      0202 8D 7B 02   000005 |    STA Ball
-      0205 8D 7D 02   000006 |    STA RIGHT_MOST_POSITION
-                      000007 |    
-      0208 A9 80      000008 |    LDA #10000000b
-      020A 8D 7C 02   000009 |    STA LEFT_MOST_POSITION
-                      000010 |    
-                      000011 |; Loop for game logic loop    
-      020D            000012 |GameLoop:
-      020D AD 7B 02   000013 |    LDA Ball
-      0210 8D 00 A2   000014 |    STA 0a200h
-                      000015 |    
-                      000016 |    ; Delay
-      0213 20 5F 02   000017 |    JSR ShiftDelay
-                      000018 |    
-                      000019 |    ; Shift left
-      0216 20 51 02   000020 |    JSR ShiftLeft
+      0000            000001 |PrntMess: equ E00Ch ;Print a message to the user.
+                      000002 |
+      0200            000003 |    ORG 0200h
+                      000004 |    
+                      000005 |    ; Initialize Ball
+      0200 A9 01      000006 |    LDA #00000001b
+      0202 8D 74 03   000007 |    STA Ball
+                      000008 |    
+                      000009 |    ; Initialize Speed
+      0205 A9 FF      000010 |    LDA #0FFh
+      0207 8D 75 03   000011 |    STA Speed
+                      000012 |    
+                      000013 |    ; Initialize Scores
+      020A A9 00      000014 |    LDA #0d
+      020C 8D 76 03   000015 |    STA ScoreRight
+      020F 8D 77 03   000016 |    STA ScoreLeft
+                      000017 |    
+                      000018 |    ; X & Y reg
+      0212 A2 00      000019 |    LDX #0d
+      0214 A0 00      000020 |    LDY #0d
                       000021 |    
-                      000022 |    ; Check if left switch is down
-      0219 AD 00 AC   000023 |    LDA 0ac00h
-      021C C9 02      000024 |    CMP #00000010b
-      021E F0 10      000025 |    BEQ RightScored
-                      000026 |    
-                      000027 |    ; Check if ball is in left position
-      0220 AD 7B 02   000028 |    LDA Ball
-      0223 CD 7C 02   000029 |    CMP LEFT_MOST_POSITION
-      0226 D0 E5      000030 |    BNE GameLoop
+      0216            000022 |GameLoop:
+      0216 AD 74 03   000023 |    LDA Ball
+      0219 8D 00 A2   000024 |    STA 0A200h
+                      000025 |    
+      021C 20 2D 02   000026 |    JSR shiftLeft
+                      000027 |    
+      021F AD 75 03   000028 |    LDA Speed
+      0222 E9 06      000029 |    SBC #6d
+      0224 8D 75 03   000030 |    STA Speed
                       000031 |    
-                      000032 |    ; End program
-      0228 4C 80 02   000033 |    JMP Ending
-                      000034 |    
-                      000035 |; #####################
-                      000036 |; #    Subroutines    #
-                      000037 |; #####################
-                      000038 |
-                      000039 |; ### Right wins
-      022B            000040 |WinnerRight:
-      022B A9 0F      000041 |    LDA #00001111b
-      022D 8D 00 A4   000042 |    STA 0a400h
-                      000043 |    
-                      000044 |; ### Increase right score ###
-      0230            000045 |RightScored:
-                      000046 |;Save registers on the stack.
-      0230 48         000047 |	pha
-      0231 8A         000048 |	txa
-      0232 48         000049 |	pha
-      0233 98         000050 |	tya
-      0234 48         000051 |	pha
-                      000052 |	
-                      000053 |; Score increase logic
-      0235 EE 7E 02   000054 |    INC ScoreRight
-      0238 AD 7E 02   000055 |    LDA ScoreRight
-      023B 8D 00 A4   000056 |    STA 0a400h
-                      000057 |    
-      023E AD 7E 02   000058 |    LDA ScoreRight
-      0241 C9 05      000059 |    CMP #5d
-      0243 F0 E6      000060 |    BEQ WinnerRight
+      0227 20 DF 02   000032 |    JSR shiftRight
+                      000033 |    
+      022A 4C 16 02   000034 |    JMP GameLoop
+                      000035 |    
+                      000036 |; ###################
+                      000037 |; #   Subroutines   #  
+                      000038 |; ################### 
+                      000039 |
+      022D            000040 |shiftLeft:
+                      000041 |    ; Save register
+      022D 48         000042 |    PHA
+      022E 8A         000043 |    TXA
+      022F 48         000044 |    PHA
+      0230 98         000045 |    TYA
+      0231 48         000046 |    PHA
+                      000047 |    
+                      000048 |; Shift logic 
+      0232            000049 |leftShiftLoop:
+                      000050 |    ; Check if ball is already left; skip shift logic
+      0232 AD 74 03   000051 |    LDA Ball
+      0235 C9 80      000052 |    CMP #10000000b
+      0237 F0 36      000053 |    BEQ cancelLeftShift
+                      000054 |    
+      0239 20 C2 02   000055 |    JSR delay
+      023C 20 C2 02   000056 |    JSR delay
+      023F 20 C2 02   000057 |    JSR delay
+      0242 20 C2 02   000058 |    JSR delay
+                      000059 |    
+      0245 0E 74 03   000060 |    ASL Ball
                       000061 |    
-      0245 AD 7D 02   000062 |    LDA RIGHT_MOST_POSITION
-      0248 8D 7B 02   000063 |    STA Ball
-                      000064 |	
-                      000065 |;Restore registers from the stack.
-      024B 68         000066 |	pla
-      024C A8         000067 |	tay
-      024D 68         000068 |	pla
-      024E AA         000069 |	tax
-      024F 68         000070 |	pla
-                      000071 |
-      0250 60         000072 |	rts
-                      000073 |	
-                      000074 |
-                      000075 |; ### Left ball shift ###
-      0251            000076 |ShiftLeft:
-                      000077 |;Save registers on the stack.
-      0251 48         000078 |	pha
-      0252 8A         000079 |	txa
-      0253 48         000080 |	pha
-      0254 98         000081 |	tya
-      0255 48         000082 |	pha
-                      000083 |	
-                      000084 |; Shift logic
-      0256 0E 7B 02   000085 |    ASL Ball
-                      000086 |	
-                      000087 |;Restore registers from the stack.
-      0259 68         000088 |	pla
-      025A A8         000089 |	tay
-      025B 68         000090 |	pla
-      025C AA         000091 |	tax
-      025D 68         000092 |	pla
-                      000093 |
-      025E 60         000094 |	rts
-                      000095 |	
-                      000096 |
-                      000097 |; ### Delay Subroutine ###
-      025F            000098 |ShiftDelay:
-                      000099 |;Save registers on the stack.
-      025F 48         000100 |	pha
-      0260 8A         000101 |	txa
-      0261 48         000102 |	pha
-      0262 98         000103 |	tya
-      0263 48         000104 |	pha
-                      000105 |	
-                      000106 |;Change the number that is being loaded into the
-                      000107 |; 'A' register in order to change the delay time.
-      0264 A9 2F      000108 |	lda #02Fh
-                      000109 |	
-      0266            000110 |OutLoop:
-      0266 A2 30      000111 |	ldx #030h
-                      000112 |
-      0268            000113 |InLoop1:
-      0268 A0 FF      000114 |	ldy #0ffh
-                      000115 |
-      026A            000116 |InLoop2:
-      026A 88         000117 |	dey
-      026B F0 FD      000118 |	beq InLoop2
-                      000119 |
-      026D CA         000120 |	dex
-      026E D0 F8      000121 |	bne InLoop1
-                      000122 |
-      0270 38         000123 |	sec
-      0271 E9 01      000124 |	sbc #1d
-      0273 D0 F1      000125 |	bne OutLoop
-                      000126 |	
-                      000127 |;Restore registers from the stack.
-      0275 68         000128 |	pla
-      0276 A8         000129 |	tay
-      0277 68         000130 |	pla
-      0278 AA         000131 |	tax
-      0279 68         000132 |	pla
-                      000133 |
-      027A 60         000134 |	rts 
-                      000135 |    
-                      000136 |    
-                      000137 |; ###################
-                      000138 |; #    Variables    #
-                      000139 |; ###################
-                      000140 |
-                      000141 |; Ball location
-      027B            000142 |Ball:
-      027B 00         000143 |    dbt 0d
-                      000144 |    
-                      000145 |; Left most position allowed
-      027C            000146 |LEFT_MOST_POSITION:
-      027C 00         000147 |    dbt 0d
-                      000148 |    
-                      000149 |; Right most position allowed
-      027D            000150 |RIGHT_MOST_POSITION:
-      027D 00         000151 |    dbt 0d
+                      000062 |    ; Check if paddle is down; cheating
+      0248 AD 00 A6   000063 |    LDA 0A600h
+      024B C9 02      000064 |    CMP #00000010b
+      024D F0 26      000065 |    BEQ rightScores
+                      000066 |    
+      024F AD 74 03   000067 |    LDA Ball
+      0252 8D 00 A2   000068 |    STA 0A200h
+                      000069 |    
+      0255 20 C2 02   000070 |    JSR delay
+      0258 20 C2 02   000071 |    JSR delay
+      025B 20 C2 02   000072 |    JSR delay
+      025E 20 C2 02   000073 |    JSR delay
+                      000074 |    
+                      000075 |    ; Check if ball is already left; check for hitting
+      0261 AD 74 03   000076 |    LDA Ball
+      0264 C9 80      000077 |    CMP #10000000b
+      0266 D0 CA      000078 |    BNE leftShiftLoop
+                      000079 |    
+                      000080 |    ; Check if paddle is down; hitting
+      0268 AD 00 A6   000081 |    LDA 0A600h
+      026B C9 02      000082 |    CMP #000000010b
+      026D D0 06      000083 |    BNE rightScores
+                      000084 |    
+      026F            000085 |cancelLeftShift:
+                      000086 |    ; Restore registers
+      026F 68         000087 |    PLA
+      0270 A8         000088 |    TAY
+      0271 68         000089 |    PLA
+      0272 AA         000090 |    TAX
+      0273 68         000091 |    PLA
+      0274 60         000092 |    RTS
+                      000093 | 
+      0275            000094 |rightScores:
+      0275 48         000095 |    PHA
+      0276 8A         000096 |    TXA
+      0277 48         000097 |    PHA
+      0278 98         000098 |    TYA
+      0279 48         000099 |    PHA
+                      000100 |    
+      027A A2 87      000101 |    ldx #RightScoredMessage<
+      027C A0 03      000102 |    ldy #RightScoredMessage>
+      027E 20 0C E0   000103 |    jsr PrntMess
+                      000104 |    
+      0281 EE 76 03   000105 |    INC scoreRight
+      0284 AD 76 03   000106 |    LDA scoreRight
+      0287 C9 05      000107 |    CMP #5d
+      0289 F0 30      000108 |    BEQ rightWins
+                      000109 |    
+      028B 8D 76 03   000110 |    STA scoreRight
+                      000111 |    
+      028E A9 01      000112 |    LDA #00000001b
+      0290 8D 74 03   000113 |    STA Ball
+      0293 8D 00 A2   000114 |    STA 0a200h
+      0296 20 C2 02   000115 |    JSR delay
+      0299 20 C2 02   000116 |    JSR delay
+      029C 20 C2 02   000117 |    JSR delay
+      029F 20 C2 02   000118 |    JSR delay
+      02A2 20 C2 02   000119 |    JSR delay
+      02A5 20 C2 02   000120 |    JSR delay
+      02A8 20 C2 02   000121 |    JSR delay
+      02AB 20 C2 02   000122 |    JSR delay
+                      000123 |    
+      02AE A9 FF      000124 |    LDA #0FFh
+      02B0 8D 75 03   000125 |    STA Speed
+                      000126 |    
+      02B3 68         000127 |    PLA
+      02B4 A8         000128 |    TAY
+      02B5 68         000129 |    PLA
+      02B6 AA         000130 |    TAX
+      02B7 68         000131 |    PLA
+      02B8 4C 16 02   000132 |    JMP GameLoop
+                      000133 |    
+      02BB            000134 |rightWins:
+      02BB A2 A7      000135 |    ldx #RightWinnerMessage<
+      02BD A0 03      000136 |    ldy #RightWinnerMessage>
+      02BF 20 0C E0   000137 |    jsr PrntMess
+                      000138 |    END    
+                      000139 |    
+      02C2            000140 |delay:
+                      000141 |    ; Save reg
+      02C2 48         000142 |    PHA
+      02C3 8A         000143 |    TXA
+      02C4 48         000144 |    PHA
+      02C5 98         000145 |    TYA
+      02C6 48         000146 |    PHA
+                      000147 |    
+      02C7 AD 75 03   000148 |    LDA Speed
+                      000149 |    
+      02CA            000150 |OutLoop:
+      02CA A2 FF      000151 |    LDX #0FFh
                       000152 |    
-      027E            000153 |ScoreRight:
-      027E 00         000154 |    dbt 0d
+      02CC            000153 |InLoop1:
+      02CC A0 FF      000154 |    LDY #0FFh
                       000155 |    
-      027F            000156 |ScoreLeft:
-      027F 00         000157 |    dbt 0d
-                      000158 |
-      0280            000159 |Ending:
-                      000160 |    end
+      02CE            000156 |InLoop2:
+      02CE 88         000157 |    DEY
+      02CF F0 FD      000158 |    BEQ InLoop2
+                      000159 |    
+      02D1 CA         000160 |    DEX
+      02D2 D0 F8      000161 |    BNE InLoop1
+                      000162 |    
+      02D4 38         000163 |    SEC
+      02D5 E9 01      000164 |    SBC #1d
+      02D7 D0 F1      000165 |    BNE OutLoop
+                      000166 |    
+                      000167 |; Restore registers
+      02D9 68         000168 |    PLA
+      02DA A8         000169 |    TAY
+      02DB 68         000170 |    PLA
+      02DC AA         000171 |    TAX
+      02DD 68         000172 |    PLA
+      02DE 60         000173 |    RTS
+                      000174 |    
+                      000175 |
+      02DF            000176 |shiftRight:
+                      000177 |    ; Save register
+      02DF 48         000178 |    PHA
+      02E0 8A         000179 |    TXA
+      02E1 48         000180 |    PHA
+      02E2 98         000181 |    TYA
+      02E3 48         000182 |    PHA
+                      000183 |    
+                      000184 |; Shift logic 
+      02E4            000185 |rightShiftLoop:
+                      000186 |    ; Check if ball is already right; skip shift logic
+      02E4 AD 74 03   000187 |    LDA Ball
+      02E7 C9 01      000188 |    CMP #00000001b
+      02E9 F0 36      000189 |    BEQ cancelRightShift
+                      000190 |    
+      02EB 20 C2 02   000191 |    JSR delay
+      02EE 20 C2 02   000192 |    JSR delay
+      02F1 20 C2 02   000193 |    JSR delay
+      02F4 20 C2 02   000194 |    JSR delay
+                      000195 |    
+      02F7 4E 74 03   000196 |    LSR Ball
+                      000197 |    
+                      000198 |    ; Check if paddle is down; cheating
+      02FA AD 00 A6   000199 |    LDA 0A600h
+      02FD C9 01      000200 |    CMP #00000001b
+      02FF F0 26      000201 |    BEQ leftScores
+                      000202 |    
+      0301 AD 74 03   000203 |    LDA Ball
+      0304 8D 00 A2   000204 |    STA 0A200h
+                      000205 |    
+      0307 20 C2 02   000206 |    JSR delay
+      030A 20 C2 02   000207 |    JSR delay
+      030D 20 C2 02   000208 |    JSR delay
+      0310 20 C2 02   000209 |    JSR delay
+                      000210 |    
+                      000211 |    ; Check if ball is already right; check for hitting
+      0313 AD 74 03   000212 |    LDA Ball
+      0316 C9 01      000213 |    CMP #00000001b
+      0318 D0 CA      000214 |    BNE rightShiftLoop
+                      000215 |    
+                      000216 |    ; Check if paddle is down; hitting
+      031A AD 00 A6   000217 |    LDA 0A600h
+      031D C9 01      000218 |    CMP #000000001b
+      031F D0 06      000219 |    BNE leftScores
+                      000220 |    
+      0321            000221 |cancelRightShift:
+                      000222 |    ; Restore registers
+      0321 68         000223 |    PLA
+      0322 A8         000224 |    TAY
+      0323 68         000225 |    PLA
+      0324 AA         000226 |    TAX
+      0325 68         000227 |    PLA
+      0326 60         000228 |    RTS
+                      000229 | 
+      0327            000230 |leftScores:
+      0327 48         000231 |    PHA
+      0328 8A         000232 |    TXA
+      0329 48         000233 |    PHA
+      032A 98         000234 |    TYA
+      032B 48         000235 |    PHA
+                      000236 |    
+      032C A2 78      000237 |    ldx #LeftScoredMessage<
+      032E A0 03      000238 |    ldy #LeftScoredMessage>
+      0330 20 0C E0   000239 |    jsr PrntMess
+                      000240 |    
+      0333 EE 77 03   000241 |    INC scoreLeft
+      0336 AD 77 03   000242 |    LDA scoreLeft
+      0339 C9 05      000243 |    CMP #5d
+      033B F0 30      000244 |    BEQ leftWins
+                      000245 |    
+      033D 8D 77 03   000246 |    STA scoreLeft
+                      000247 |    
+      0340 A9 80      000248 |    LDA #10000000b
+      0342 8D 74 03   000249 |    STA Ball
+      0345 8D 00 A2   000250 |    STA 0a200h
+      0348 20 C2 02   000251 |    JSR delay
+      034B 20 C2 02   000252 |    JSR delay
+      034E 20 C2 02   000253 |    JSR delay
+      0351 20 C2 02   000254 |    JSR delay
+      0354 20 C2 02   000255 |    JSR delay
+      0357 20 C2 02   000256 |    JSR delay
+      035A 20 C2 02   000257 |    JSR delay
+      035D 20 C2 02   000258 |    JSR delay
+                      000259 |    
+      0360 A9 FF      000260 |    LDA #0FFh
+      0362 8D 75 03   000261 |    STA Speed
+                      000262 |    
+      0365 68         000263 |    PLA
+      0366 A8         000264 |    TAY
+      0367 68         000265 |    PLA
+      0368 AA         000266 |    TAX
+      0369 68         000267 |    PLA
+      036A 4C 16 02   000268 |    JMP GameLoop
+                      000269 |    
+      036D            000270 |leftWins:
+      036D A2 97      000271 |    ldx #LeftWinnerMessage<
+      036F A0 03      000272 |    ldy #LeftWinnerMessage>
+      0371 20 0C E0   000273 |    jsr PrntMess
+                      000274 |    END
+                      000275 |  
+                      000276 |; #################
+                      000277 |; #   Variables   #  
+                      000278 |; ################# 
+                      000279 |
+      0374            000280 |Ball:
+      0374 00         000281 |    dbt 0d
+                      000282 |
+      0375            000283 |Speed:
+      0375 00         000284 |    dbt 0d
+                      000285 |    
+      0376            000286 |ScoreRight:
+      0376 00         000287 |    dbt 0d
+                      000288 |    
+      0377            000289 |ScoreLeft:
+      0377 00         000290 |    dbt 0d
+                      000291 |    END
+                      000292 |    
+      0378            000293 |LeftScoredMessage:
+      0378 0A         000294 |    dbt 0ah,0dh
+      0379 0D               
+      037A 4C         000295 |    dbt "Left Scored!"
+      037B 65 66 74         
+      037E 20 53 63         
+      0381 6F 72 65         
+      0384 64 21            
+      0386 00         000296 |    dbt 0d
+                      000297 |    
+      0387            000298 |RightScoredMessage:
+      0387 0A         000299 |    dbt 0ah,0dh
+      0388 0D               
+      0389 52         000300 |    dbt "Right Scored!"
+      038A 69 67 68         
+      038D 74 20 53         
+      0390 63 6F 72         
+      0393 65 64 21         
+      0396 00         000301 |    dbt 0d
+                      000302 |    
+      0397            000303 |LeftWinnerMessage:
+      0397 0A         000304 |    dbt 0ah,0dh
+      0398 0D               
+      0399 57         000305 |    dbt "WINNER: LEFT!"
+      039A 49 4E 4E         
+      039D 45 52 3A         
+      03A0 20 4C 45         
+      03A3 46 54 21         
+      03A6 00         000306 |    dbt 0d
+                      000307 |    
+      03A7            000308 |RightWinnerMessage:
+      03A7 0A         000309 |    dbt 0ah,0dh
+      03A8 0D               
+      03A9 57         000310 |    dbt "WINNER: RIGHT!"
+      03AA 49 4E 4E         
+      03AD 45 52 3A         
+      03B0 20 52 49         
+      03B3 47 48 54         
+      03B6 21               
+      03B7 00         000311 |    dbt 0d
       
       *** Symbol Table ***
-      {SCORELEFT=639, SHIFTDELAY=607, ENDING=640, BALL=635, LEFT_MOST_POSITION=636, GAMELOOP=525, INLOOP2=618, INLOOP1=616, RIGHT_MOST_POSITION=637, SHIFTLEFT=593, RIGHTSCORED=560, OUTLOOP=614, SCORERIGHT=638, =0, WINNERRIGHT=555}
+      {BALL=884, CANCELRIGHTSHIFT=801, PRNTMESS=57356, RIGHTSHIFTLOOP=740, INLOOP2=718, INLOOP1=716, OUTLOOP=714, RIGHTSCORES=629, LEFTSHIFTLOOP=562, CANCELLEFTSHIFT=623, SPEED=885, SHIFTLEFT=557, RIGHTWINNERMESSAGE=935, DELAY=706, LEFTSCORES=807, SCORERIGHT=886, RIGHTSCOREDMESSAGE=903, SHIFTRIGHT=735, LEFTWINNERMESSAGE=919, SCORELEFT=887, GAMELOOP=534, LEFTWINS=877, LEFTSCOREDMESSAGE=888, RIGHTWINS=699, =0}
 .   %/output
 
 
 
 %/group
-
